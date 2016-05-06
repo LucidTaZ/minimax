@@ -72,8 +72,29 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($newState->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
     }
 
-    public function testEnginePreventsALoss()
+    public function testEnginePreventsALoss1()
     {
+        $X = Player::X();
+
+        $state = new GameState;
+        // X
+        // X
+        // OO
+        $state->fillField(0, 0); // X
+        $state->fillField(2, 0); // O
+        $state->fillField(1, 0); // X
+        $state->fillField(2, 1); // O
+
+        $engine = new Engine($X);
+        $decision = $engine->decide($state);
+        $newState = $decision->apply($state);
+
+        $this->assertTrue($newState->getField(2, 2)->equals($X), 'Lower-right field must be taken by X');
+    }
+
+    public function testEnginePreventsALoss2()
+    {
+        // Rotated version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
 
         $state = new GameState;
@@ -92,7 +113,7 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($newState->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
 
-    public function testEngineForcesAWin()
+    public function testEngineForcesAWin1()
     {
         $X = Player::X();
 
@@ -110,6 +131,27 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $newState = $decision->apply($state);
 
         $this->assertTrue($newState->getField(2, 2)->equals($X), 'Bottom-right field must be taken by X');
+    }
+
+    public function testEngineForcesAWin2()
+    {
+        // Rotated version of another test, to rule out accidental, unstrategic wins
+        $X = Player::X();
+
+        $state = new GameState;
+        // X O
+        //  O
+        //   X
+        $state->fillField(2, 2); // X
+        $state->fillField(0, 2); // O
+        $state->fillField(0, 0); // X
+        $state->fillField(1, 1); // O
+
+        $engine = new Engine($X);
+        $decision = $engine->decide($state);
+        $newState = $decision->apply($state);
+
+        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
 
     public function testEngineHandlesOneDrawOption()
