@@ -64,6 +64,7 @@ class Engine
         }
 
         $bestDecisionWithScore = new DecisionWithScore;
+        $bestDecisionWithScore->score = -1; // TODO: Put score properly into a "case class", with UNKNOWN, MIN, MAX and Value(x)
         foreach ($possibleMoves as $move) {
             $newState = $move->apply($state);
 

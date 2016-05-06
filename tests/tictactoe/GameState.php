@@ -48,17 +48,9 @@ class GameState implements GameStateInterface
             return 999;
         }
         if ($this->lose($player)) {
-            return 0;
+            return -999;
         }
-        $score = 0;
-        foreach ($this->board as $row) {
-            foreach ($row as $field) {
-                if ($field->equals($player)) {
-                    $score++;
-                }
-            }
-        }
-        return $score;
+        return 0;
     }
 
     private function win(Player $player): bool

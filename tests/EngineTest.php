@@ -22,6 +22,23 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $this->countFilledFields($newState));
     }
 
+    public function testEngineDecidesWhenAllScoresZero()
+    {
+        // Regression test: it used to say "no possible moves".
+        $cleanState = $this->getMockBuilder(GameState::class)
+            ->setMethods(['evaluateScore'])
+            ->getMock();
+        $cleanState->expects($this->atLeastOnce())
+            ->method('evaluateScore')
+            ->willReturn(0);
+        $engine = new Engine(Player::X());
+
+        $this->assertEquals(0, $this->countFilledFields($cleanState), 'Test precondition');
+        $decision = $engine->decide($cleanState);
+        $newState = $decision->apply($cleanState);
+        $this->assertEquals(1, $this->countFilledFields($newState));
+    }
+
     private function countFilledFields(GameState $state): int
     {
         $count = 0;
