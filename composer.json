@@ -1,0 +1,25 @@
+{
+    "name": "lucidtaz/minimax",
+    "description": "MiniMax engine for game decision making",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thijs Zumbrink",
+            "email": "thijs@schalpoen.nl"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.3"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": { "lucidtaz\\minimax\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "lucidtaz\\minimax\\tests\\": "tests/" }
+    }
+}
