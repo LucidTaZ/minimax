@@ -2,10 +2,12 @@
 
 namespace lucidtaz\minimax\tests;
 
+use LogicException;
 use lucidtaz\minimax\Engine;
 use lucidtaz\minimax\tests\tictactoe\GameState;
 use lucidtaz\minimax\tests\tictactoe\Player;
 use PHPUnit_Framework_TestCase;
+use RuntimeException;
 
 class EngineTest extends PHPUnit_Framework_TestCase
 {
@@ -115,5 +117,38 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $newState = $decision->apply($state);
 
         $this->assertTrue($newState->getField(1, 0)->equals($X), 'Middle-left field must be taken by X');
+    }
+
+    public function testExceptionWhenNotOurTurn()
+    {
+        $cleanState = new GameState;
+        $engine = new Engine(Player::O());
+
+        $this->expectException(LogicException::class);
+        $engine->decide($cleanState);
+    }
+
+    public function testExceptionWhenNoMovesLeft()
+    {
+        $O = Player::O();
+
+        $state = new GameState;
+        // OXX
+        // XOO
+        // XOX
+        $state->fillField(2, 0); // X
+        $state->fillField(0, 0); // O
+        $state->fillField(0, 2); // X
+        $state->fillField(1, 1); // O
+        $state->fillField(0, 1); // X
+        $state->fillField(2, 1); // O
+        $state->fillField(2, 2); // X
+        $state->fillField(1, 2); // O
+        $state->fillField(1, 0); // X
+
+        $engine = new Engine($O);
+
+        $this->expectException(RuntimeException::class);
+        $engine->decide($state);
     }
 }
