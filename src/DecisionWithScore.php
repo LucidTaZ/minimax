@@ -11,5 +11,10 @@ class DecisionWithScore {
     /**
      * @var float
      */
-    public $score = 0.0;
+    public $score;
+
+    public function isBetterThan(DecisionWithScore $other): bool
+    {
+        return $this->score > $other->score;
+    }
 }

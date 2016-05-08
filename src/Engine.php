@@ -36,14 +36,14 @@ class Engine
     private function decideMax(GameState $state, int $depthLeft)
     {
         return $this->decideVar($state, $depthLeft, function (DecisionWithScore $a, DecisionWithScore $b) {
-            return $a->score > $b->score ? $a : $b;
+            return $a->isBetterThan($b) ? $a : $b;
         });
     }
 
     private function decideMin(GameState $state, int $depthLeft)
     {
         return $this->decideVar($state, $depthLeft, function (DecisionWithScore $a, DecisionWithScore $b) {
-            return $a->score < $b->score ? $a : $b;
+            return $b->isBetterThan($a) ? $a : $b;
         });
     }
 
@@ -63,29 +63,49 @@ class Engine
             return $result;
         }
 
-        $bestDecisionWithScore = new DecisionWithScore;
-        $bestDecisionWithScore->score = null; // TODO: Put score properly into a "case class", with UNKNOWN, MIN, MAX and Value(x)
+        $bestDecisionWithScore = null;
         foreach ($possibleMoves as $move) {
             $newState = $move->apply($state);
 
-            if ($newState->getNextPlayer()->isFriendsWith($this->objectivePlayer)) {
-                $nextDecisionWithScore = $this->decideMax($newState, $depthLeft - 1);
-            } else {
-                $nextDecisionWithScore = $this->decideMin($newState, $depthLeft - 1);
-            }
+            $nextDecisionWithScore = $this->considerNextMove($newState, $depthLeft - 1);
 
-            if ($bestDecisionWithScore->score === null) {
-                $bestDecisionWithScore = $nextDecisionWithScore;
+            $replaced = false;
+            $bestDecisionWithScore = $this->replaceIfBetter(
+                $ideal,
+                $nextDecisionWithScore,
+                $bestDecisionWithScore,
+                $replaced
+            );
+            if ($replaced) {
                 $bestDecisionWithScore->decision = $move;
-            } else {
-                $idealDecisionWithScoreFutureMoves = $ideal($nextDecisionWithScore, $bestDecisionWithScore);
-                if ($idealDecisionWithScoreFutureMoves != $bestDecisionWithScore) {
-                    $bestDecisionWithScore = $idealDecisionWithScoreFutureMoves;
-                    $bestDecisionWithScore->decision = $move;
-                }
             }
         }
 
         return $bestDecisionWithScore;
+    }
+
+    private function considerNextMove(GameState $state, $depthLeft): DecisionWithScore
+    {
+        if ($state->getNextPlayer()->isFriendsWith($this->objectivePlayer)) {
+            return $this->decideMax($state, $depthLeft);
+        }
+        return $nextDecisionWithScore = $this->decideMin($state, $depthLeft);
+    }
+
+    private function replaceIfBetter(Closure $ideal, DecisionWithScore $new, DecisionWithScore $current = null, &$replaced = false): DecisionWithScore
+    {
+        if ($current === null) {
+            $replaced = true;
+            return $new;
+        }
+
+        $idealDecisionWithScore = $ideal($new, $current);
+        if ($idealDecisionWithScore === $new) {
+            $replaced = true;
+            return $new;
+        }
+
+        $replaced = false;
+        return $current;
     }
 }
