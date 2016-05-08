@@ -6,6 +6,7 @@ use LogicException;
 use lucidtaz\minimax\Engine;
 use lucidtaz\minimax\tests\tictactoe\GameState;
 use lucidtaz\minimax\tests\tictactoe\Player;
+use lucidtaz\minimax\tests\tictactoe\ShuffledDecisionsGameState;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
 
@@ -163,6 +164,27 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $X = Player::X();
 
         $state = new GameState;
+        // X O
+        //  O
+        //   X
+        $state->fillField(2, 2); // X
+        $state->fillField(0, 2); // O
+        $state->fillField(0, 0); // X
+        $state->fillField(1, 1); // O
+
+        $engine = new Engine($X);
+        $decision = $engine->decide($state);
+        $newState = $decision->apply($state);
+
+        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
+    }
+
+    public function testEngineForcesAWin3()
+    {
+        // Randomly ordered decisions version of another test, to rule out accidental, unstrategic wins
+        $X = Player::X();
+
+        $state = new ShuffledDecisionsGameState;
         // X O
         //  O
         //   X
