@@ -122,6 +122,7 @@ class GameState implements GameStateInterface
                 }
             }
         }
+        //shuffle($decisions); // TODO: Figure out why this sometimes fails (even simple) tests, like a guaranteed win
         return $decisions;
     }
 

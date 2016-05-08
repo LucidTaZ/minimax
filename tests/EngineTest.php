@@ -54,6 +54,7 @@ class EngineTest extends PHPUnit_Framework_TestCase
 
     public function testEngineTakesAWin()
     {
+        // TODO: This test sometimes fails when we apply shuffle to tictactoe\GameState::getDecisions(). Investigate...
         $X = Player::X();
 
         $state = new GameState;
