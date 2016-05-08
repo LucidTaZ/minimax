@@ -64,19 +64,9 @@ class Engine
         }
 
         $bestDecisionWithScore = new DecisionWithScore;
-        $bestDecisionWithScore->score = -1; // TODO: Put score properly into a "case class", with UNKNOWN, MIN, MAX and Value(x)
+        $bestDecisionWithScore->score = null; // TODO: Put score properly into a "case class", with UNKNOWN, MIN, MAX and Value(x)
         foreach ($possibleMoves as $move) {
             $newState = $move->apply($state);
-
-            $applyingThisMoveDecisionWithScore = new DecisionWithScore;
-            $applyingThisMoveDecisionWithScore->decision = $move;
-            $applyingThisMoveDecisionWithScore->score = $newState->evaluateScore($this->objectivePlayer);
-
-            $idealDecisionWithScoreThisMove = $ideal($applyingThisMoveDecisionWithScore, $bestDecisionWithScore);
-            if ($idealDecisionWithScoreThisMove != $bestDecisionWithScore) {
-                $bestDecisionWithScore = $idealDecisionWithScoreThisMove;
-                $bestDecisionWithScore->decision = $move;
-            }
 
             if ($newState->getNextPlayer()->isFriendsWith($this->objectivePlayer)) {
                 $nextDecisionWithScore = $this->decideMax($newState, $depthLeft - 1);
@@ -84,10 +74,15 @@ class Engine
                 $nextDecisionWithScore = $this->decideMin($newState, $depthLeft - 1);
             }
 
-            $idealDecisionWithScoreFutureMoves = $ideal($nextDecisionWithScore, $bestDecisionWithScore);
-            if ($idealDecisionWithScoreFutureMoves != $bestDecisionWithScore) {
-                $bestDecisionWithScore = $idealDecisionWithScoreFutureMoves;
+            if ($bestDecisionWithScore->score === null) {
+                $bestDecisionWithScore = $nextDecisionWithScore;
                 $bestDecisionWithScore->decision = $move;
+            } else {
+                $idealDecisionWithScoreFutureMoves = $ideal($nextDecisionWithScore, $bestDecisionWithScore);
+                if ($idealDecisionWithScoreFutureMoves != $bestDecisionWithScore) {
+                    $bestDecisionWithScore = $idealDecisionWithScoreFutureMoves;
+                    $bestDecisionWithScore->decision = $move;
+                }
             }
         }
 
