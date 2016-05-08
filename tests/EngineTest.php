@@ -154,6 +154,31 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($newState->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
 
+    public function testEnginePlaysAgainstItself()
+    {
+        // Tic Tac Toe Minimax against itself should always result in a draw
+        $X = Player::X();
+        $O = Player::O();
+
+        $state = new GameState;
+
+        $engineX = new Engine($X, 4);
+        $engineO = new Engine($O, 4);
+
+        for ($i = 0; $i < 8; $i += 2) {
+            $decisionX = $engineX->decide($state);
+            $state = $decisionX->apply($state);
+            $decisionO = $engineO->decide($state);
+            $state = $decisionO->apply($state);
+        }
+        $lastDecisionX = $engineX->decide($state);
+        $state = $lastDecisionX->apply($state);
+
+        $this->assertEquals(9, $this->countFilledFields($state), 'All fields must be full');
+        $this->assertEquals(0, $state->evaluateScore($X), 'Player X must not win');
+        $this->assertEquals(0, $state->evaluateScore($O), 'Player O must not win');
+    }
+
     public function testEngineHandlesOneDrawOption()
     {
         $X = Player::X();
