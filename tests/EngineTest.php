@@ -52,9 +52,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         return $count;
     }
 
-    public function testEngineTakesAWin()
+    public function testEngineTakesAWin1()
     {
-        // TODO: This test sometimes fails when we apply shuffle to tictactoe\GameState::getDecisions(). Investigate...
         $X = Player::X();
 
         $state = new GameState;
@@ -71,6 +70,30 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $newState = $decision->apply($state);
 
         $this->assertTrue($newState->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
+    }
+
+    public function testEngineTakesAWin2()
+    {
+        // TODO: Fix this failing test
+        // After fixing, introduce a shuffle in tictactoe\GameState::getDecisions() to verify that shuffling does not produce fails
+
+        // Rotated version of another test, to rule out accidental, unstrategic wins
+        $X = Player::X();
+
+        $state = new GameState;
+        // O
+        //  O
+        //  XX
+        $state->fillField(2, 2); // X
+        $state->fillField(1, 1); // O
+        $state->fillField(2, 1); // X
+        $state->fillField(0, 0); // O
+
+        $engine = new Engine($X); // Note: this test only fails with maxDepth>=3
+        $decision = $engine->decide($state);
+        $newState = $decision->apply($state);
+
+        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
 
     public function testEnginePreventsALoss1()
