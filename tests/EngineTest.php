@@ -74,10 +74,10 @@ class EngineTest extends PHPUnit_Framework_TestCase
 
     public function testEngineTakesAWin2()
     {
-        // TODO: Fix this failing test
-        // After fixing, introduce a shuffle in tictactoe\GameState::getDecisions() to verify that shuffling does not produce fails
-
         // Rotated version of another test, to rule out accidental, unstrategic wins
+        // If this test fails, it may be due to an alternative win in two turns,
+        // instead of the intended win in one turn. This was fixed by preferring
+        // solutions that were found earlier.
         $X = Player::X();
 
         $state = new GameState;
@@ -89,7 +89,7 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->fillField(2, 1); // X
         $state->fillField(0, 0); // O
 
-        $engine = new Engine($X); // Note: this test only fails with maxDepth>=3
+        $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
@@ -186,8 +186,9 @@ class EngineTest extends PHPUnit_Framework_TestCase
 
         $state = new GameState;
 
-        $engineX = new Engine($X, 4);
-        $engineO = new Engine($O, 4);
+        // Note: This test (when confronted with a random shuffle in the decision order) depends on high enough maxDepth values
+        $engineX = new Engine($X, 6);
+        $engineO = new Engine($O, 6);
 
         for ($i = 0; $i < 8; $i += 2) {
             $decisionX = $engineX->decide($state);

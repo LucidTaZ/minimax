@@ -51,6 +51,7 @@ class Engine
     {
         if ($depthLeft == 0) {
             $result = new DecisionWithScore;
+            $result->age = $depthLeft;
             $result->score = $state->evaluateScore($this->objectivePlayer);
             return $result;
         }
@@ -59,6 +60,7 @@ class Engine
         $possibleMoves = $state->getDecisions();
         if (empty($possibleMoves)) {
             $result = new DecisionWithScore;
+            $result->age = $depthLeft;
             $result->score = $state->evaluateScore($this->objectivePlayer);
             return $result;
         }
