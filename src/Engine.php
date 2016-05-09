@@ -91,7 +91,7 @@ class Engine
         if ($state->getNextPlayer()->isFriendsWith($this->objectivePlayer)) {
             return $this->decideMax($state, $depthLeft);
         }
-        return $nextDecisionWithScore = $this->decideMin($state, $depthLeft);
+        return $this->decideMin($state, $depthLeft);
     }
 
     private function replaceIfBetter(Closure $ideal, DecisionWithScore $new, DecisionWithScore $current = null, &$replaced = false): DecisionWithScore
