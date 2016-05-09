@@ -67,20 +67,27 @@ class Engine
 
         $bestDecisionWithScore = null;
         foreach ($possibleMoves as $move) {
-            $newState = $move->apply($state);
+            $bestDecisionWithScore = $this->considerMove($move, $state, $depthLeft, $ideal, $bestDecisionWithScore);
+        }
 
-            $nextDecisionWithScore = $this->considerNextMove($newState, $depthLeft - 1);
+        return $bestDecisionWithScore;
+    }
 
-            $replaced = false;
-            $bestDecisionWithScore = $this->replaceIfBetter(
-                $ideal,
-                $nextDecisionWithScore,
-                $bestDecisionWithScore,
-                $replaced
-            );
-            if ($replaced) {
-                $bestDecisionWithScore->decision = $move;
-            }
+    private function considerMove(Decision $move, GameState $state, int $depthLeft, Closure $ideal, DecisionWithScore $bestDecisionWithScoreSoFar = null): DecisionWithScore
+    {
+        $newState = $move->apply($state);
+
+        $nextDecisionWithScore = $this->considerNextMove($newState, $depthLeft - 1);
+
+        $replaced = false;
+        $bestDecisionWithScore = $this->replaceIfBetter(
+            $ideal,
+            $nextDecisionWithScore,
+            $bestDecisionWithScoreSoFar,
+            $replaced
+        );
+        if ($replaced) {
+            $bestDecisionWithScore->decision = $move;
         }
 
         return $bestDecisionWithScore;
