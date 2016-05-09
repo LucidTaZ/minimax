@@ -2,7 +2,8 @@
 
 namespace lucidtaz\minimax;
 
-class DecisionWithScore {
+class DecisionWithScore
+{
     /**
      * @var Decision
      */

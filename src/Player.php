@@ -2,7 +2,8 @@
 
 namespace lucidtaz\minimax;
 
-interface Player {
+interface Player
+{
     /**
      * Returns whether the given Player is this instance
      */

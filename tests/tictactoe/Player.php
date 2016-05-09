@@ -38,5 +38,4 @@ class Player implements PlayerInterface
     {
         return $this->equals($other);
     }
-
 }

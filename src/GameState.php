@@ -2,7 +2,8 @@
 
 namespace lucidtaz\minimax;
 
-interface GameState {
+interface GameState
+{
     /**
      * Give possible Decisions from here
      * @return Decision[]

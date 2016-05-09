@@ -2,7 +2,8 @@
 
 namespace lucidtaz\minimax;
 
-interface Decision {
+interface Decision
+{
     /**
      * Mutates a GameState to a new GameState
      */
