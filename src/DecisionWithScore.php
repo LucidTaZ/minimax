@@ -28,4 +28,18 @@ class DecisionWithScore
         }
         return $this->score > $other->score;
     }
+
+    public static function getBestComparator(): \Closure
+    {
+        return function (DecisionWithScore $a, DecisionWithScore $b) {
+            return $a->isBetterThan($b) ? $a : $b;
+        };
+    }
+
+    public static function getWorstComparator(): \Closure
+    {
+        return function (DecisionWithScore $a, DecisionWithScore $b) {
+            return $b->isBetterThan($a) ? $a : $b;
+        };
+    }
 }
