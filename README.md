@@ -8,3 +8,42 @@ MiniMax engine in PHP
 This library provides easy integration of the MiniMax game decision making
 algorithm into your game, using a simple interface to separate the algorithm
 from the game logic.
+
+Usage
+-----
+
+To use this library, first make sure you implement each interface in
+`lucidtaz\minimax\game`.
+
+Then, simply construct an instance of `lucidtaz\minimax\engine\Engine`, give it
+the `Player` to act as, and when it is the player's turn, call the `decide()`
+method. This will result in the `Decision` instance that may then be executed.
+
+In code:
+
+```php
+class MyPlayer implements lucidtaz\minimax\game\Player
+{
+    ...
+}
+
+class MyDecision implements lucidtaz\minimax\game\Decision
+{
+    ...
+}
+
+class MyGameState implements lucidtaz\minimax\game\GameState
+{
+    ...
+}
+
+$player = new MyPlayer(...);
+$engine = new Engine($player);
+
+$gameState = new MyGameState(...);
+
+$decision = $engine->decide($gameState);
+$newGameState = $decision->apply($gameState);
+```
+
+For an example, see the `tests/tictactoe` directory.
