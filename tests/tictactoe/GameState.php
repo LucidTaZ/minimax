@@ -2,8 +2,8 @@
 
 namespace lucidtaz\minimax\tests\tictactoe;
 
-use lucidtaz\minimax\GameState as GameStateInterface;
-use lucidtaz\minimax\Player as PlayerInterface;
+use lucidtaz\minimax\game\GameState as GameStateInterface;
+use lucidtaz\minimax\game\Player as PlayerInterface;
 
 class GameState implements GameStateInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace lucidtaz\minimax;
+namespace lucidtaz\minimax\game;
 
 interface Decision
 {

@@ -3,7 +3,7 @@
 namespace lucidtaz\minimax\tests;
 
 use LogicException;
-use lucidtaz\minimax\Engine;
+use lucidtaz\minimax\engine\Engine;
 use lucidtaz\minimax\tests\tictactoe\GameState;
 use lucidtaz\minimax\tests\tictactoe\Player;
 use lucidtaz\minimax\tests\tictactoe\ShuffledDecisionsGameState;

@@ -1,8 +1,11 @@
 <?php
 
-namespace lucidtaz\minimax;
+namespace lucidtaz\minimax\engine;
 
 use Closure;
+use lucidtaz\minimax\game\Decision;
+use lucidtaz\minimax\game\GameState;
+use lucidtaz\minimax\game\Player;
 
 class DecisionPoint
 {

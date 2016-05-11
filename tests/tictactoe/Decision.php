@@ -2,8 +2,8 @@
 
 namespace lucidtaz\minimax\tests\tictactoe;
 
-use lucidtaz\minimax\Decision as DecisionInterface;
-use lucidtaz\minimax\GameState as GameStateInterface;
+use lucidtaz\minimax\game\Decision as DecisionInterface;
+use lucidtaz\minimax\game\GameState as GameStateInterface;
 
 class Decision implements DecisionInterface
 {

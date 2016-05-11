@@ -2,7 +2,7 @@
 
 namespace lucidtaz\minimax\tests\tictactoe;
 
-use lucidtaz\minimax\Player as PlayerInterface;
+use lucidtaz\minimax\game\Player as PlayerInterface;
 
 class Player implements PlayerInterface
 {
