@@ -7,6 +7,8 @@ use lucidtaz\minimax\game\Decision;
 
 class DecisionWithScore
 {
+    const EPSILON = 0.00001;
+
     /**
      * @var Decision
      */
@@ -26,7 +28,7 @@ class DecisionWithScore
 
     public function isBetterThan(DecisionWithScore $other): bool
     {
-        if (abs($this->score - $other->score) < 0.1) {
+        if (abs($this->score - $other->score) < self::EPSILON) {
             return $this->age > $other->age;
         }
         return $this->score > $other->score;
