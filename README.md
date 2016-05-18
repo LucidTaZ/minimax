@@ -22,23 +22,23 @@ method. This will result in the `Decision` instance that may then be executed.
 In code:
 
 ```php
-class MyPlayer implements lucidtaz\minimax\game\Player
+class MyPlayer implements \lucidtaz\minimax\game\Player
 {
     ...
 }
 
-class MyDecision implements lucidtaz\minimax\game\Decision
+class MyDecision implements \lucidtaz\minimax\game\Decision
 {
     ...
 }
 
-class MyGameState implements lucidtaz\minimax\game\GameState
+class MyGameState implements \lucidtaz\minimax\game\GameState
 {
     ...
 }
 
 $player = new MyPlayer(...);
-$engine = new Engine($player);
+$engine = new \lucidtaz\minimax\engine\Engine($player);
 
 $gameState = new MyGameState(...);
 
