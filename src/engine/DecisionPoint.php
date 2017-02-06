@@ -78,8 +78,10 @@ class DecisionPoint
         return $result;
     }
 
-    private function considerMove(Decision $move, DecisionWithScore $bestDecisionWithScoreSoFar = null): DecisionWithScore
-    {
+    private function considerMove(
+        Decision $move,
+        DecisionWithScore $bestDecisionWithScoreSoFar = null
+    ): DecisionWithScore {
         $newState = $move->apply($this->state);
 
         $nextDecisionWithScore = $this->considerNextMove($newState);
@@ -100,13 +102,18 @@ class DecisionPoint
     private function considerNextMove(GameState $newState): DecisionWithScore
     {
         $nextPlayerIsFriendly = $newState->getNextPlayer()->isFriendsWith($this->objectivePlayer);
-        $comparator = $nextPlayerIsFriendly ? DecisionWithScore::getBestComparator() : DecisionWithScore::getWorstComparator();
+        $comparator = $nextPlayerIsFriendly
+            ? DecisionWithScore::getBestComparator()
+            : DecisionWithScore::getWorstComparator();
         $nextDecisionPoint = new static($this->objectivePlayer, $newState, $this->depthLeft - 1, $comparator);
         return $nextDecisionPoint->decide();
     }
 
-    private function replaceIfBetter(DecisionWithScore $new, DecisionWithScore $current = null, &$replaced = false): DecisionWithScore
-    {
+    private function replaceIfBetter(
+        DecisionWithScore $new,
+        DecisionWithScore $current = null,
+        &$replaced = false
+    ): DecisionWithScore {
         if ($current === null) {
             $replaced = true;
             return $new;

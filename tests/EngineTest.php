@@ -208,7 +208,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
 
         $state = new GameState;
 
-        // Note: This test (when confronted with a random shuffle in the decision order) depends on high enough maxDepth values
+        // Note: This test (when confronted with a random shuffle in the
+        // decision order) depends on high enough maxDepth values
         $engineX = new Engine($X, 6);
         $engineO = new Engine($O, 6);
 

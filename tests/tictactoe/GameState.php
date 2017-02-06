@@ -107,7 +107,10 @@ class GameState implements GameStateInterface
     private function hasColumn(Player $player): bool
     {
         for ($column = 0; $column < 3; $column++) {
-            if ($player->equals($this->board[0][$column]) && $player->equals($this->board[1][$column]) && $player->equals($this->board[2][$column])) {
+            if ($player->equals($this->board[0][$column])
+                && $player->equals($this->board[1][$column])
+                && $player->equals($this->board[2][$column])
+            ) {
                 return true;
             }
         }
@@ -116,10 +119,16 @@ class GameState implements GameStateInterface
 
     private function hasDiagonal(Player $player): bool
     {
-        if ($player->equals($this->board[0][0]) && $player->equals($this->board[1][1]) && $player->equals($this->board[2][2])) {
+        if ($player->equals($this->board[0][0])
+            && $player->equals($this->board[1][1])
+            && $player->equals($this->board[2][2])
+        ) {
             return true;
         }
-        if ($player->equals($this->board[2][0]) && $player->equals($this->board[1][1]) && $player->equals($this->board[0][2])) {
+        if ($player->equals($this->board[2][0])
+            && $player->equals($this->board[1][1])
+            && $player->equals($this->board[0][2])
+        ) {
             return true;
         }
         return false;
