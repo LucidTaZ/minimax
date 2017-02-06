@@ -7,11 +7,31 @@ use lucidtaz\minimax\game\Decision;
 use lucidtaz\minimax\game\GameState;
 use lucidtaz\minimax\game\Player;
 
+/**
+ * Node in the decision search tree
+ */
 class DecisionPoint
 {
+    /**
+     * @var Player The player to optimize for.
+     */
     private $objectivePlayer;
+
+    /**
+     * @var GameState The current GameState to base future decisions on.
+     */
     private $state;
+
+    /**
+     * @var int Limit on how deep we can continue to search, recursion limiter.
+     */
     private $depthLeft;
+
+    /**
+     * @var Closure Objective function to optimize. This enables the caller to
+     * select either the most favorable or the least favorable outcome. It
+     * receives two DecisionWithScore objects and returns the ideal one.
+     */
     private $ideal;
 
     /**

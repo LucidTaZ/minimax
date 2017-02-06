@@ -18,7 +18,9 @@ interface Decision
     /**
      * Mutates a GameState to a new GameState
      *
-     * Do not update $sourceState, it is immutable!
+     * Do not update $sourceState, it is immutable! Note: this may be relaxed by
+     * explicitly passing a clone from the engine, making the library a bit
+     * friendlier.
      */
     public function apply(GameState $sourceState): GameState;
 }

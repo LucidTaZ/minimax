@@ -5,10 +5,29 @@ namespace lucidtaz\minimax\tests\tictactoe;
 use lucidtaz\minimax\game\GameState as GameStateInterface;
 use lucidtaz\minimax\game\Player as PlayerInterface;
 
+/**
+ * Representation of the state of a TicTacToe game
+ *
+ * This is everything needed to know the game at a specific point in time,
+ * namely:
+ * - The X-es and O-s on the board
+ * - Whose turn it is
+ *
+ * From this it can calculate:
+ * - Is there a win?
+ * - Heuristic score (simply based on win = very high, loss = very low)
+ * - What are the possible moves for the current player?
+ */
 class GameState implements GameStateInterface
 {
+    /**
+     * @var array Simple 3x3 array of Player objects to denote who owns it.
+     */
     private $board;
 
+    /**
+     * @var Player Reference to the player whose turn it currently is.
+     */
     private $turn;
 
     public function __construct()
@@ -107,6 +126,7 @@ class GameState implements GameStateInterface
     }
 
     /**
+     * Get all possible moves that can be taken by the current player
      * @return Decision[]
      */
     public function getDecisions(): array

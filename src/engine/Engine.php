@@ -8,6 +8,13 @@ use lucidtaz\minimax\game\GameState;
 use lucidtaz\minimax\game\Player;
 use RuntimeException;
 
+/**
+ * MiniMax game engine
+ *
+ * Construct an object of this class, give it the player to optimize for, and
+ * call decide() when it is time for the player to make a move, in order to get
+ * the Decision that the engine has taken for the player.
+ */
 class Engine
 {
     private $objectivePlayer;
