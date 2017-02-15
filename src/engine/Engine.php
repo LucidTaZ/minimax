@@ -21,6 +21,10 @@ class Engine
 
     private $maxDepth;
 
+    /**
+     * @param Player $objectivePlayer The player to play as
+     * @param int $maxDepth How far ahead should the engine look?
+     */
     public function __construct(Player $objectivePlayer, int $maxDepth = 3)
     {
         $this->objectivePlayer = $objectivePlayer;
@@ -29,6 +33,11 @@ class Engine
 
     /**
      * Evaluate possible decisions and take the best one
+     * @param GameState $state Current state of the game for which there needs
+     * to be made a decision. This implicitly means that the objective player
+     * currently must have its turn in the GameState.
+     * @return Decision The decision taken by the engine, to be manually applied
+     * to the GameState
      */
     public function decide(GameState $state): Decision
     {
