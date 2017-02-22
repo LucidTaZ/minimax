@@ -30,7 +30,7 @@ class Decision implements DecisionInterface
     public function apply(GameStateInterface $sourceState): GameStateInterface
     {
         $newState = clone $sourceState; // We must not change the $sourceState, the algorithm depends on that!
-        $newState->fillField($this->row, $this->column);
+        $newState->makeMove($this->row, $this->column);
         return $newState;
     }
 }

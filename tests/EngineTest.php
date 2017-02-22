@@ -4,6 +4,7 @@ namespace lucidtaz\minimax\tests;
 
 use LogicException;
 use lucidtaz\minimax\engine\Engine;
+use lucidtaz\minimax\tests\tictactoe\Board;
 use lucidtaz\minimax\tests\tictactoe\GameState;
 use lucidtaz\minimax\tests\tictactoe\Player;
 use lucidtaz\minimax\tests\tictactoe\ShuffledDecisionsGameState;
@@ -17,10 +18,10 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $cleanState = new GameState;
         $engine = new Engine(Player::X());
 
-        $this->assertEquals(0, $this->countFilledFields($cleanState), 'Test precondition');
+        $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
         $decision = $engine->decide($cleanState);
         $newState = $decision->apply($cleanState);
-        $this->assertEquals(1, $this->countFilledFields($newState));
+        $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
 
     public function testEngineDecidesWhenAllScoresZero()
@@ -34,18 +35,18 @@ class EngineTest extends PHPUnit_Framework_TestCase
             ->willReturn(0);
         $engine = new Engine(Player::X());
 
-        $this->assertEquals(0, $this->countFilledFields($cleanState), 'Test precondition');
+        $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
         $decision = $engine->decide($cleanState);
         $newState = $decision->apply($cleanState);
-        $this->assertEquals(1, $this->countFilledFields($newState));
+        $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
 
-    private function countFilledFields(GameState $state): int
+    private function countFilledFields(Board $board): int
     {
         $count = 0;
         for ($row = 0; $row < 3; $row++) {
             for ($col = 0; $col < 3; $col++) {
-                if ($state->getField($row, $col) != Player::NONE()) {
+                if ($board->getField($row, $col) != Player::NONE()) {
                     $count++;
                 }
             }
@@ -61,16 +62,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // XX
         //  O
         //   O
-        $state->fillField(0, 0); // X
-        $state->fillField(1, 1); // O
-        $state->fillField(0, 1); // X
-        $state->fillField(2, 2); // O
+        $state->makeMove(0, 0); // X
+        $state->makeMove(1, 1); // O
+        $state->makeMove(0, 1); // X
+        $state->makeMove(2, 2); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
+        $this->assertTrue($newState->board->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
     }
 
     public function testEngineTakesAWin2()
@@ -85,16 +86,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // O
         //  O
         //  XX
-        $state->fillField(2, 2); // X
-        $state->fillField(1, 1); // O
-        $state->fillField(2, 1); // X
-        $state->fillField(0, 0); // O
+        $state->makeMove(2, 2); // X
+        $state->makeMove(1, 1); // O
+        $state->makeMove(2, 1); // X
+        $state->makeMove(0, 0); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
+        $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
 
     public function testEnginePreventsALoss1()
@@ -105,16 +106,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // X
         // X
         // OO
-        $state->fillField(0, 0); // X
-        $state->fillField(2, 0); // O
-        $state->fillField(1, 0); // X
-        $state->fillField(2, 1); // O
+        $state->makeMove(0, 0); // X
+        $state->makeMove(2, 0); // O
+        $state->makeMove(1, 0); // X
+        $state->makeMove(2, 1); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(2, 2)->equals($X), 'Lower-right field must be taken by X');
+        $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Lower-right field must be taken by X');
     }
 
     public function testEnginePreventsALoss2()
@@ -126,16 +127,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // OXX
         // O
         //
-        $state->fillField(0, 1); // X
-        $state->fillField(0, 0); // O
-        $state->fillField(0, 2); // X
-        $state->fillField(1, 0); // O
+        $state->makeMove(0, 1); // X
+        $state->makeMove(0, 0); // O
+        $state->makeMove(0, 2); // X
+        $state->makeMove(1, 0); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
+        $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
 
     public function testEngineForcesAWin1()
@@ -146,16 +147,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // O X
         //  O
         // X
-        $state->fillField(2, 0); // X
-        $state->fillField(0, 0); // O
-        $state->fillField(0, 2); // X
-        $state->fillField(1, 1); // O
+        $state->makeMove(2, 0); // X
+        $state->makeMove(0, 0); // O
+        $state->makeMove(0, 2); // X
+        $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(2, 2)->equals($X), 'Bottom-right field must be taken by X');
+        $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Bottom-right field must be taken by X');
     }
 
     public function testEngineForcesAWin2()
@@ -167,16 +168,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // X O
         //  O
         //   X
-        $state->fillField(2, 2); // X
-        $state->fillField(0, 2); // O
-        $state->fillField(0, 0); // X
-        $state->fillField(1, 1); // O
+        $state->makeMove(2, 2); // X
+        $state->makeMove(0, 2); // O
+        $state->makeMove(0, 0); // X
+        $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
+        $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
 
     public function testEngineForcesAWin3()
@@ -188,16 +189,16 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // X O
         //  O
         //   X
-        $state->fillField(2, 2); // X
-        $state->fillField(0, 2); // O
-        $state->fillField(0, 0); // X
-        $state->fillField(1, 1); // O
+        $state->makeMove(2, 2); // X
+        $state->makeMove(0, 2); // O
+        $state->makeMove(0, 0); // X
+        $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
+        $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
 
     public function testEnginePlaysAgainstItself()
@@ -222,7 +223,7 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $lastDecisionX = $engineX->decide($state);
         $state = $lastDecisionX->apply($state);
 
-        $this->assertEquals(9, $this->countFilledFields($state), 'All fields must be full');
+        $this->assertEquals(9, $this->countFilledFields($state->board), 'All fields must be full');
         $this->assertEquals(0, $state->evaluateScore($X), 'Player X must not win');
         $this->assertEquals(0, $state->evaluateScore($O), 'Player O must not win');
     }
@@ -235,20 +236,20 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // OXX
         //  OO
         // XOX
-        $state->fillField(2, 0); // X
-        $state->fillField(0, 0); // O
-        $state->fillField(0, 2); // X
-        $state->fillField(1, 1); // O
-        $state->fillField(0, 1); // X
-        $state->fillField(2, 1); // O
-        $state->fillField(2, 2); // X
-        $state->fillField(1, 2); // O
+        $state->makeMove(2, 0); // X
+        $state->makeMove(0, 0); // O
+        $state->makeMove(0, 2); // X
+        $state->makeMove(1, 1); // O
+        $state->makeMove(0, 1); // X
+        $state->makeMove(2, 1); // O
+        $state->makeMove(2, 2); // X
+        $state->makeMove(1, 2); // O
 
         $engine = new Engine($X);
         $decision = $engine->decide($state);
         $newState = $decision->apply($state);
 
-        $this->assertTrue($newState->getField(1, 0)->equals($X), 'Middle-left field must be taken by X');
+        $this->assertTrue($newState->board->getField(1, 0)->equals($X), 'Middle-left field must be taken by X');
     }
 
     public function testExceptionWhenNotOurTurn()
@@ -268,15 +269,15 @@ class EngineTest extends PHPUnit_Framework_TestCase
         // OXX
         // XOO
         // XOX
-        $state->fillField(2, 0); // X
-        $state->fillField(0, 0); // O
-        $state->fillField(0, 2); // X
-        $state->fillField(1, 1); // O
-        $state->fillField(0, 1); // X
-        $state->fillField(2, 1); // O
-        $state->fillField(2, 2); // X
-        $state->fillField(1, 2); // O
-        $state->fillField(1, 0); // X
+        $state->makeMove(2, 0); // X
+        $state->makeMove(0, 0); // O
+        $state->makeMove(0, 2); // X
+        $state->makeMove(1, 1); // O
+        $state->makeMove(0, 1); // X
+        $state->makeMove(2, 1); // O
+        $state->makeMove(2, 2); // X
+        $state->makeMove(1, 2); // O
+        $state->makeMove(1, 0); // X
 
         $engine = new Engine($O);
 
