@@ -9,18 +9,10 @@ namespace lucidtaz\minimax\game;
  * from one GameState to the next. The AI engine uses this in an immutable
  * fashion, to evaluate possible future moves.
  *
- * If mutability is desired, give a copy of the GameState to the
- * Engine::decide() method, then apply the resulting decision on the original
- * GameState yourself.
+ * The emptiness of this class may seem odd. It exists to satisfy type hinting
+ * and static code analysis, and to guide the implementer to what is needed.
  */
 interface Decision
 {
-    /**
-     * Mutates a GameState to a new GameState
-     *
-     * Do not update $sourceState, it is immutable! Note: this may be relaxed by
-     * explicitly passing a clone from the engine, making the library a bit
-     * friendlier.
-     */
-    public function apply(GameState $sourceState): GameState;
+
 }

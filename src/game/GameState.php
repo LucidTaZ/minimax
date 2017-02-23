@@ -14,6 +14,15 @@ interface GameState
     public function getDecisions(): array;
 
     /**
+     * Apply the decided move and compute the resulting GameState
+     *
+     * Do not update the current game state, it is immutable! Note: this may be
+     * relaxed by explicitly passing a clone from the engine, making the library
+     * a bit friendlier.
+     */
+    public function applyDecision(Decision $decision): GameState;
+
+    /**
      * Return the player that has its turn from here
      */
     public function getNextPlayer(): Player;

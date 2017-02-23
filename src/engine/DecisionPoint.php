@@ -107,7 +107,7 @@ class DecisionPoint
         Decision $move,
         DecisionWithScore $bestDecisionWithScoreSoFar = null
     ): DecisionWithScore {
-        $newState = $move->apply($this->state);
+        $newState = $this->state->applyDecision($move);
 
         $nextDecisionWithScore = $this->considerNextMove($newState);
 

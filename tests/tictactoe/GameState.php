@@ -2,6 +2,7 @@
 
 namespace lucidtaz\minimax\tests\tictactoe;
 
+use lucidtaz\minimax\game\Decision as DecisionInterface;
 use lucidtaz\minimax\game\GameState as GameStateInterface;
 use lucidtaz\minimax\game\Player as PlayerInterface;
 
@@ -42,6 +43,15 @@ class GameState implements GameStateInterface
         $this->turn = clone $this->turn;
     }
 
+    /**
+     * @param Decision $decision
+     * @return GameState
+     */
+    public function applyDecision(DecisionInterface $decision): GameStateInterface
+    {
+        return $decision->apply($this);
+    }
+
     public function makeMove(int $row, int $column)
     {
         $this->board->fillField($row, $column, $this->turn);
@@ -57,6 +67,9 @@ class GameState implements GameStateInterface
         }
     }
 
+    /**
+     * @param Player $player
+     */
     public function evaluateScore(PlayerInterface $player): float
     {
         if ($this->win($player)) {
