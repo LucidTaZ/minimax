@@ -8,5 +8,4 @@ install:
   - composer install --dev
 
 script:
-    - vendor/bin/phpunit
-    - vendor/bin/phpstan analyse --level 4 src tests
+  - composer ci

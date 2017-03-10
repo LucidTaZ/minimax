@@ -22,5 +22,16 @@
     },
     "autoload-dev": {
         "psr-4": { "lucidtaz\\minimax\\tests\\": "tests/" }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "stan": "vendor/bin/phpstan analyse --level 4 src tests",
+        "check": [
+            "@stan"
+        ],
+        "ci": [
+            "@check",
+            "@test"
+        ]
     }
 }
