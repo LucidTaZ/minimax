@@ -63,6 +63,7 @@ class ReversiTest extends TestCase
         $this->assertEquals($BLUE, $state->getNextPlayer(), 'Test precondition');
 
         $engine = new Engine($BLUE);
+        /* @var $newState GameState */
         $newState = $engine->decide($state);
 
         $this->assertEquals(4, $newState->board->countOwnedCells($BLUE), 'Blue cell count increased');
