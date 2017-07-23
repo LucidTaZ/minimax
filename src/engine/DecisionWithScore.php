@@ -35,7 +35,7 @@ class DecisionWithScore
     public function isBetterThan(DecisionWithScore $other): bool
     {
         if (abs($this->score - $other->score) < self::EPSILON) {
-            // Scores are considered the same, prefer earliest decision
+            // Scores are considered the same, prefer earliest decision. (Shallowest node)
             return $this->age > $other->age;
         }
         return $this->score > $other->score;

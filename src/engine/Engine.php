@@ -42,11 +42,11 @@ class Engine
         if (!$state->getNextPlayer()->equals($this->objectivePlayer)) {
             throw new BadMethodCallException('It is not this players turn');
         }
-        $topLevelNode = new DecisionPoint(
+        $topLevelNode = new DecisionNode(
             $this->objectivePlayer,
             $state,
             $this->maxDepth,
-            DecisionWithScore::getBestComparator()
+            NodeType::MAX()
         );
         $decisionWithScore = $topLevelNode->decide();
         if ($decisionWithScore->decision === null) {

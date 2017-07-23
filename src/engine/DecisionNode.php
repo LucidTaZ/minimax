@@ -2,7 +2,6 @@
 
 namespace lucidtaz\minimax\engine;
 
-use Closure;
 use lucidtaz\minimax\game\GameState;
 use lucidtaz\minimax\game\Player;
 
@@ -10,9 +9,9 @@ use lucidtaz\minimax\game\Player;
  * Node in the decision search tree
  * An object of this class can be queried for its ideal decision (and according
  * score) by calling the decide() method. It will recursively construct child
- * nodes and evaluating them using that method as well.
+ * nodes and evaluate them using that method as well.
  */
-class DecisionPoint
+class DecisionNode
 {
     /**
      * @var Player The player to optimize for.
@@ -30,26 +29,24 @@ class DecisionPoint
     private $depthLeft;
 
     /**
-     * @var Closure Objective function to optimize. This enables the caller to
-     * select either the most favorable or the least favorable outcome. It
-     * receives two DecisionWithScore objects and returns the ideal one.
+     * @var NodeType Whether we are a min-node or a max-node. This enables the
+     * caller to select either the most favorable or the least favorable
+     * outcome.
      */
-    private $ideal;
+    private $type;
 
     /**
      * @param Player $objectivePlayer The Player to optimize for
      * @param GameState $state Current GameState to base decisions on
      * @param int $depthLeft Recursion limiter
-     * @param Closure $ideal Function that takes two DecisionWithScore objects
-     * and returns the ideal one. In some situations this is the best, in others
-     * it is the worst.
+     * @param NodeType $type Signifies whether to minimize or maximize the score
      */
-    public function __construct(Player $objectivePlayer, GameState $state, int $depthLeft, Closure $ideal)
+    public function __construct(Player $objectivePlayer, GameState $state, int $depthLeft, NodeType $type)
     {
         $this->objectivePlayer = $objectivePlayer;
         $this->state = $state;
         $this->depthLeft = $depthLeft;
-        $this->ideal = $ideal;
+        $this->type = $type;
     }
 
     /**
@@ -130,14 +127,11 @@ class DecisionPoint
     private function considerNextMove(GameState $stateAfterMove): DecisionWithScore
     {
         $nextPlayerIsFriendly = $stateAfterMove->getNextPlayer()->isFriendsWith($this->objectivePlayer);
-        $comparator = $nextPlayerIsFriendly
-            ? DecisionWithScore::getBestComparator()
-            : DecisionWithScore::getWorstComparator();
         $nextDecisionPoint = new static(
             $this->objectivePlayer,
             $stateAfterMove,
             $this->depthLeft - 1,
-            $comparator
+            $nextPlayerIsFriendly ? $this->type : $this->type->alternate()
         );
         return $nextDecisionPoint->decide();
     }
@@ -161,7 +155,9 @@ class DecisionPoint
             return $new;
         }
 
-        $ideal = $this->ideal;
+        $ideal = $this->type == NodeType::MIN()
+            ? DecisionWithScore::getWorstComparator()
+            : DecisionWithScore::getBestComparator();
         $idealDecisionWithScore = $ideal($new, $current);
         if ($idealDecisionWithScore === $new) {
             $replaced = true;
