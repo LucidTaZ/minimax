@@ -8,19 +8,12 @@ namespace lucidtaz\minimax\game;
 interface GameState
 {
     /**
-     * Give possible Decisions (moves) from the current state
-     * @return Decision[]
+     * Give possible moves from the current state
+     * Do this by applying every possible decision on the current state,
+     * returning the resulting game states.
+     * @return GameState[]
      */
-    public function getDecisions(): array;
-
-    /**
-     * Apply the decided move and compute the resulting GameState
-     *
-     * Do not update the current game state, it is immutable! Note: this may be
-     * relaxed by explicitly passing a clone from the engine, making the library
-     * a bit friendlier.
-     */
-    public function applyDecision(Decision $decision): GameState;
+    public function getPossibleMoves(): array;
 
     /**
      * Return the player that has its turn from here

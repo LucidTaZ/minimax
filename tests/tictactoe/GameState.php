@@ -2,7 +2,6 @@
 
 namespace lucidtaz\minimax\tests\tictactoe;
 
-use lucidtaz\minimax\game\Decision as DecisionInterface;
 use lucidtaz\minimax\game\GameState as GameStateInterface;
 use lucidtaz\minimax\game\Player as PlayerInterface;
 
@@ -41,15 +40,6 @@ class GameState implements GameStateInterface
     {
         $this->board = clone $this->board;
         $this->turn = clone $this->turn;
-    }
-
-    /**
-     * @param Decision $decision
-     * @return GameState
-     */
-    public function applyDecision(DecisionInterface $decision): GameStateInterface
-    {
-        return $decision->apply($this);
     }
 
     public function makeMove(int $row, int $column)
@@ -105,19 +95,21 @@ class GameState implements GameStateInterface
 
     /**
      * Get all possible moves that can be taken by the current player
-     * @return Decision[]
+     * @return GameState[]
      */
-    public function getDecisions(): array
+    public function getPossibleMoves(): array
     {
         if ($this->win($this->turn) || $this->lose($this->turn)) {
             return [];
         }
-        $decisions = [];
+        $possibleMoves = [];
         foreach ($this->board->getEmptyFields() as $emptyField) {
             list($row, $col) = $emptyField;
-            $decisions[] = new Decision($row, $col);
+            $stateAfterMove = clone $this;
+            $stateAfterMove->makeMove($row, $col);
+            $possibleMoves[] = $stateAfterMove;
         }
-        return $decisions;
+        return $possibleMoves;
     }
 
     public function getNextPlayer(): PlayerInterface
