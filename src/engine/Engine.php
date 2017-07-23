@@ -3,7 +3,6 @@
 namespace lucidtaz\minimax\engine;
 
 use BadMethodCallException;
-use lucidtaz\minimax\game\Decision;
 use lucidtaz\minimax\game\GameState;
 use lucidtaz\minimax\game\Player;
 use RuntimeException;
@@ -36,10 +35,9 @@ class Engine
      * @param GameState $state Current state of the game for which there needs
      * to be made a decision. This implicitly means that the objective player
      * currently must have its turn in the GameState.
-     * @return Decision The decision taken by the engine, to be manually applied
-     * to the GameState
+     * @return GameState The state resulting after the engine made its decision.
      */
-    public function decide(GameState $state): Decision
+    public function decide(GameState $state): GameState
     {
         if (!$state->getNextPlayer()->equals($this->objectivePlayer)) {
             throw new BadMethodCallException('It is not this players turn');

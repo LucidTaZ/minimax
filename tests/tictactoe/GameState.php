@@ -57,6 +57,9 @@ class GameState implements GameStateInterface
         }
     }
 
+    /**
+     * @param Player $player
+     */
     public function evaluateScore(PlayerInterface $player): float
     {
         if ($this->win($player)) {
@@ -92,19 +95,21 @@ class GameState implements GameStateInterface
 
     /**
      * Get all possible moves that can be taken by the current player
-     * @return Decision[]
+     * @return GameState[]
      */
-    public function getDecisions(): array
+    public function getPossibleMoves(): array
     {
         if ($this->win($this->turn) || $this->lose($this->turn)) {
             return [];
         }
-        $decisions = [];
+        $possibleMoves = [];
         foreach ($this->board->getEmptyFields() as $emptyField) {
             list($row, $col) = $emptyField;
-            $decisions[] = new Decision($row, $col);
+            $stateAfterMove = clone $this;
+            $stateAfterMove->makeMove($row, $col);
+            $possibleMoves[] = $stateAfterMove;
         }
-        return $decisions;
+        return $possibleMoves;
     }
 
     public function getNextPlayer(): PlayerInterface

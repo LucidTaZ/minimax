@@ -3,7 +3,6 @@
 namespace lucidtaz\minimax\engine;
 
 use Closure;
-use lucidtaz\minimax\game\Decision;
 use lucidtaz\minimax\game\GameState;
 use lucidtaz\minimax\game\Player;
 
@@ -67,8 +66,8 @@ class DecisionPoint
             return $this->makeLeafResult();
         }
 
-        /* @var $possibleMoves Decision[] */
-        $possibleMoves = $this->state->getDecisions();
+        /* @var $possibleMoves GameState[] */
+        $possibleMoves = $this->state->getPossibleMoves();
         if (empty($possibleMoves)) {
             return $this->makeLeafResult();
         }
@@ -97,19 +96,17 @@ class DecisionPoint
 
     /**
      * Apply a move and evaluate the outcome
-     * @param Decision $move The move to be applied
+     * @param GameState $stateAfterMove The result of taking the move
      * @param DecisionWithScore $bestDecisionWithScoreSoFar Best result
      * encountered so far. TODO: Can probably be cleaned up by moving that logic
      * to the caller.
      * @return DecisionWithScore
      */
     private function considerMove(
-        Decision $move,
+        GameState $stateAfterMove,
         DecisionWithScore $bestDecisionWithScoreSoFar = null
     ): DecisionWithScore {
-        $newState = $move->apply($this->state);
-
-        $nextDecisionWithScore = $this->considerNextMove($newState);
+        $nextDecisionWithScore = $this->considerNextMove($stateAfterMove);
 
         $replaced = false;
         $bestDecisionWithScore = $this->replaceIfBetter(
@@ -118,7 +115,7 @@ class DecisionPoint
             $replaced
         );
         if ($replaced) {
-            $bestDecisionWithScore->decision = $move;
+            $bestDecisionWithScore->decision = $stateAfterMove;
         }
 
         return $bestDecisionWithScore;
@@ -126,17 +123,22 @@ class DecisionPoint
 
     /**
      * Recursively evaluate a child decision
-     * @param GameState $newState The GameState that was created as a result of
-     * the current Decision.
+     * @param GameState $stateAfterMove The GameState that was created as a
+     * result of the current move.
      * @return DecisionWithScore
      */
-    private function considerNextMove(GameState $newState): DecisionWithScore
+    private function considerNextMove(GameState $stateAfterMove): DecisionWithScore
     {
-        $nextPlayerIsFriendly = $newState->getNextPlayer()->isFriendsWith($this->objectivePlayer);
+        $nextPlayerIsFriendly = $stateAfterMove->getNextPlayer()->isFriendsWith($this->objectivePlayer);
         $comparator = $nextPlayerIsFriendly
             ? DecisionWithScore::getBestComparator()
             : DecisionWithScore::getWorstComparator();
-        $nextDecisionPoint = new static($this->objectivePlayer, $newState, $this->depthLeft - 1, $comparator);
+        $nextDecisionPoint = new static(
+            $this->objectivePlayer,
+            $stateAfterMove,
+            $this->depthLeft - 1,
+            $comparator
+        );
         return $nextDecisionPoint->decide();
     }
 

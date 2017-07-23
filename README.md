@@ -17,17 +17,13 @@ To use this library, first make sure you implement each interface in
 
 Then, simply construct an instance of `lucidtaz\minimax\engine\Engine`, give it
 the `Player` to act as, and when it is the player's turn, call the `decide()`
-method. This will result in the `Decision` instance that may then be executed.
+method. This will result in the `GameState` instance that results after the
+engine takes its move.
 
 In code:
 
 ```php
 class MyPlayer implements \lucidtaz\minimax\game\Player
-{
-    ...
-}
-
-class MyDecision implements \lucidtaz\minimax\game\Decision
 {
     ...
 }
@@ -42,8 +38,7 @@ $engine = new \lucidtaz\minimax\engine\Engine($player);
 
 $gameState = new MyGameState(...);
 
-$decision = $engine->decide($gameState);
-$newGameState = $decision->apply($gameState);
+$newGameState = $engine->decide($gameState);
 ```
 
 For an example, see the `tests/tictactoe` directory.

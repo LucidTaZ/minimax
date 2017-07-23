@@ -19,25 +19,20 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $engine = new Engine(Player::X());
 
         $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
-        $decision = $engine->decide($cleanState);
-        $newState = $decision->apply($cleanState);
+        /* @var $newState GameState */
+        $newState = $engine->decide($cleanState);
         $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
 
     public function testEngineDecidesWhenAllScoresZero()
     {
         // Regression test: it used to say "no possible moves".
-        $cleanState = $this->getMockBuilder(GameState::class)
-            ->setMethods(['evaluateScore'])
-            ->getMock();
-        $cleanState->expects($this->atLeastOnce())
-            ->method('evaluateScore')
-            ->willReturn(0);
+        $cleanState = new tictactoe\ZeroScoresGameState();
         $engine = new Engine(Player::X());
 
         $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
-        $decision = $engine->decide($cleanState);
-        $newState = $decision->apply($cleanState);
+        /* @var $newState GameState */
+        $newState = $engine->decide($cleanState);
         $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
 
@@ -68,8 +63,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(2, 2); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
     }
@@ -92,8 +87,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(0, 0); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
@@ -112,8 +107,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(2, 1); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Lower-right field must be taken by X');
     }
@@ -133,8 +128,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(1, 0); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
@@ -153,8 +148,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Bottom-right field must be taken by X');
     }
@@ -174,8 +169,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
@@ -195,8 +190,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
@@ -215,13 +210,11 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $engineO = new Engine($O, 6);
 
         for ($i = 0; $i < 8; $i += 2) {
-            $decisionX = $engineX->decide($state);
-            $state = $decisionX->apply($state);
-            $decisionO = $engineO->decide($state);
-            $state = $decisionO->apply($state);
+            $state = $engineX->decide($state);
+            $state = $engineO->decide($state);
         }
-        $lastDecisionX = $engineX->decide($state);
-        $state = $lastDecisionX->apply($state);
+        /* @var $state GameState */
+        $state = $engineX->decide($state);
 
         $this->assertEquals(9, $this->countFilledFields($state->board), 'All fields must be full');
         $this->assertEquals(0, $state->evaluateScore($X), 'Player X must not win');
@@ -246,8 +239,8 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $state->makeMove(1, 2); // O
 
         $engine = new Engine($X);
-        $decision = $engine->decide($state);
-        $newState = $decision->apply($state);
+        /* @var $newState GameState */
+        $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(1, 0)->equals($X), 'Middle-left field must be taken by X');
     }

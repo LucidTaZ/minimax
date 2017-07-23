@@ -3,7 +3,7 @@
 namespace lucidtaz\minimax\engine;
 
 use Closure;
-use lucidtaz\minimax\game\Decision;
+use lucidtaz\minimax\game\GameState;
 
 /**
  * Value object containing a decision and its resulting score
@@ -15,7 +15,7 @@ class DecisionWithScore
     const EPSILON = 0.00001;
 
     /**
-     * @var Decision
+     * @var GameState
      */
     public $decision = null;
 

@@ -29,11 +29,17 @@ class Player implements PlayerInterface
         return $result;
     }
 
+    /**
+     * @param Player $other
+     */
     public function equals(PlayerInterface $other): bool
     {
         return $other->sign == $this->sign;
     }
 
+    /**
+     * @param Player $other
+     */
     public function isFriendsWith(PlayerInterface $other): bool
     {
         return $this->equals($other);
