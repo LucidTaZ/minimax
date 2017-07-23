@@ -71,7 +71,7 @@ class DecisionNode
 
         $bestDecisionWithScore = null;
         foreach ($possibleMoves as $move) {
-            $bestDecisionWithScore = $this->considerMove($move, $bestDecisionWithScore);
+            $bestDecisionWithScore = $this->evaluateMove($move, $bestDecisionWithScore);
         }
 
         return $bestDecisionWithScore;
@@ -94,28 +94,31 @@ class DecisionNode
     /**
      * Apply a move and evaluate the outcome
      * @param GameState $stateAfterMove The result of taking the move
-     * @param DecisionWithScore $bestDecisionWithScoreSoFar Best result
-     * encountered so far. TODO: Can probably be cleaned up by moving that logic
-     * to the caller.
+     * @param DecisionWithScore $bestResultSoFar Best result encountered so far.
+     * @todo Can probably be cleaned up by moving that logic to the caller.
      * @return DecisionWithScore
      */
-    private function considerMove(
+    private function evaluateMove(
         GameState $stateAfterMove,
-        DecisionWithScore $bestDecisionWithScoreSoFar = null
+        DecisionWithScore $bestResultSoFar = null
     ): DecisionWithScore {
-        $nextDecisionWithScore = $this->considerNextMove($stateAfterMove);
+        $childResult = $this->buildAndEvaluateChildNode($stateAfterMove);
 
         $replaced = false;
-        $bestDecisionWithScore = $this->replaceIfBetter(
-            $nextDecisionWithScore,
-            $bestDecisionWithScoreSoFar,
+        $bestResult = $this->replaceIfBetter(
+            $childResult,
+            $bestResultSoFar,
             $replaced
         );
         if ($replaced) {
-            $bestDecisionWithScore->decision = $stateAfterMove;
+            // Register that the decision was reached by applying the currently
+            // evaluated move. We cannot get this decision (GameState) from the
+            // result itself, because it's already many levels deeper in the
+            // game tree.
+            $bestResult->decision = $stateAfterMove;
         }
 
-        return $bestDecisionWithScore;
+        return $bestResult;
     }
 
     /**
@@ -124,7 +127,7 @@ class DecisionNode
      * result of the current move.
      * @return DecisionWithScore
      */
-    private function considerNextMove(GameState $stateAfterMove): DecisionWithScore
+    private function buildAndEvaluateChildNode(GameState $stateAfterMove): DecisionWithScore
     {
         $nextPlayerIsFriendly = $stateAfterMove->getNextPlayer()->isFriendsWith($this->objectivePlayer);
         $nextDecisionPoint = new static(
