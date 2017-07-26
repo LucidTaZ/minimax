@@ -44,4 +44,9 @@ class Player implements PlayerInterface
     {
         return $this->equals($other);
     }
+
+    public function __toString(): string
+    {
+        return $this->sign;
+    }
 }

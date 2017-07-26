@@ -19,22 +19,22 @@ class TraversalResult
     public $move;
 
     /**
-     * @var EvaluationResult
+     * @var Evaluation
      */
     public $evaluation;
 
-    private function __construct(EvaluationResult $evaluation, GameState $move = null)
+    private function __construct(Evaluation $evaluation, GameState $move = null)
     {
         $this->move = $move;
         $this->evaluation = $evaluation;
     }
 
-    public static function create(GameState $move, EvaluationResult $evaluation): TraversalResult
+    public static function create(GameState $move, Evaluation $evaluation): TraversalResult
     {
         return new static($evaluation, $move);
     }
 
-    public static function onlyEvaluation(EvaluationResult $evaluation): TraversalResult
+    public static function withoutMove(Evaluation $evaluation): TraversalResult
     {
         return new static($evaluation);
     }

@@ -50,7 +50,8 @@ class Engine
             $this->objectivePlayer,
             $state,
             $this->maxDepth,
-            NodeType::MAX()
+            NodeType::MAX(),
+            AlphaBeta::initial()
         );
 
         $moveWithEvaluation = $rootNode->traverseGameTree();

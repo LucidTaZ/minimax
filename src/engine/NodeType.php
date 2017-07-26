@@ -27,12 +27,4 @@ class NodeType
         $result->value = 'max';
         return $result;
     }
-
-    public function alternate(): NodeType
-    {
-        if ($this == self::MIN()) {
-            return self::MAX();
-        }
-        return self::MIN();
-    }
 }

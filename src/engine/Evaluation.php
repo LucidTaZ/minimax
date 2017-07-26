@@ -9,7 +9,7 @@ use Closure;
  * These two concepts are used together so often that it warrants a separate
  * class to be able to carry them around easily.
  */
-class EvaluationResult
+class Evaluation
 {
     const EPSILON = 0.00001;
 
@@ -26,7 +26,7 @@ class EvaluationResult
      */
     public $age;
 
-    public function isBetterThan(EvaluationResult $other): bool
+    public function isBetterThan(Evaluation $other): bool
     {
         if (abs($this->score - $other->score) < self::EPSILON) {
             // Scores are considered the same, prefer earliest decision. (Shallowest node)
@@ -37,14 +37,14 @@ class EvaluationResult
 
     public static function getBestComparator(): Closure
     {
-        return function (EvaluationResult $a, EvaluationResult $b) {
+        return function (Evaluation $a, Evaluation $b) {
             return $a->isBetterThan($b) ? 1 : -1;
         };
     }
 
     public static function getWorstComparator(): Closure
     {
-        return function (EvaluationResult $a, EvaluationResult $b) {
+        return function (Evaluation $a, Evaluation $b) {
             return $b->isBetterThan($a) ? 1 : -1;
         };
     }
