@@ -5,13 +5,13 @@ namespace lucidtaz\minimax\engine;
 /**
  * Enum class
  */
-class NodeType
+final class NodeType
 {
     private $value;
 
     private function __construct()
     {
-        // Forbid direct construction
+        // Forbid manual construction
     }
 
     public static function MIN(): NodeType

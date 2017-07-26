@@ -78,39 +78,36 @@ class ReversiTest extends TestCase
      * Max depth
      *       | Duration normal
      *       |       | Duration AB pruning
-     * ------+-------+---
-     *     1 |   0.0 |  0.0
-     *     2 |   0.0 |  0.0
-     *     3 |   0.1 |  0.2
-     *     4 |   0.6 |  0.5
-     *     5 |   3   |  1
-     *     6 |  20   |  5
-     *     7 | 165   | 17
-     *
-     * @medium
-     * @todo For determinism it's better to inspect the number of visited nodes
+     *       |       |      | Nodes evaluated normal
+     *       |       |      |       |Nodes evaluated AB pruning
+     * ------+-------+------|-------+--------
+     *     1 |   0.0 |  0.0 |      5 |     5
+     *     2 |   0.0 |  0.0 |     17 |    15
+     *     3 |   0.1 |  0.2 |     85 |    67
+     *     4 |   0.6 |  0.5 |    365 |   169
+     *     5 |   3   |  1   |   2773 |   743
+     *     6 |  20   |  5   |  18595 |  2342
+     *     7 | 165   | 17   | 199309 | 13958
      */
     public function testEngineHandlesLargeSearchSpace()
     {
         $BLUE = Player::BLUE();
         $RED = Player::RED();
-        $maxDepth = 6;
+        $maxDepth = 3;
 
         $state = new GameState();
         $this->assertEquals(2, $state->board->countOwnedCells($BLUE), 'Test precondition');
         $this->assertEquals(2, $state->board->countOwnedCells($RED), 'Test precondition');
         $this->assertEquals($BLUE, $state->getNextPlayer(), 'Test precondition');
 
-        $startTime = microtime(true);
         $engine = new Engine($BLUE, $maxDepth);
         /* @var $newState GameState */
         $newState = $engine->decide($state);
-        $duration = microtime(true) - $startTime;
 
         $this->assertEquals(4, $newState->board->countOwnedCells($BLUE), 'Blue cell count increased');
         $this->assertEquals(1, $newState->board->countOwnedCells($RED), 'Red cell count decreased (piece captured)');
         $this->assertEquals($RED, $newState->getNextPlayer(), 'Player turn proceeded');
 
-        $this->assertLessThan(10, $duration, 'Search duration must be short enough');
+        $this->assertLessThan(70, $engine->getAnalytics()->nodesEvaluated, 'Evaluated nodes must indicate pruning');
     }
 }

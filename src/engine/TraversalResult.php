@@ -11,7 +11,7 @@ use lucidtaz\minimax\game\GameState;
  * produce that result, because that's the final answer that the caller is
  * interested in.
  */
-class TraversalResult
+final class TraversalResult
 {
     /**
      * @var ?GameState Empty if the traversed node was a leaf node
@@ -23,19 +23,25 @@ class TraversalResult
      */
     public $evaluation;
 
-    private function __construct(Evaluation $evaluation, GameState $move = null)
+    /**
+     * @var Analytics
+     */
+    public $analytics;
+
+    private function __construct(Evaluation $evaluation, Analytics $analytics, GameState $move = null)
     {
         $this->move = $move;
         $this->evaluation = $evaluation;
+        $this->analytics = $analytics;
     }
 
-    public static function create(GameState $move, Evaluation $evaluation): TraversalResult
+    public static function create(GameState $move, Evaluation $evaluation, Analytics $analytics): TraversalResult
     {
-        return new static($evaluation, $move);
+        return new static($evaluation, $analytics, $move);
     }
 
-    public static function withoutMove(Evaluation $evaluation): TraversalResult
+    public static function withoutMove(Evaluation $evaluation, Analytics $analytics): TraversalResult
     {
-        return new static($evaluation);
+        return new static($evaluation, $analytics);
     }
 }

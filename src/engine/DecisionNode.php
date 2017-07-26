@@ -66,15 +66,16 @@ class DecisionNode
     public function traverseGameTree(): TraversalResult
     {
         if ($this->depthLeft == 0) {
-            return TraversalResult::withoutMove($this->makeLeafEvaluation());
+            return TraversalResult::withoutMove($this->makeLeafEvaluation(), Analytics::forLeafNode());
         }
 
         /* @var $possibleMoves GameState[] */
         $possibleMoves = $this->state->getPossibleMoves();
         if (empty($possibleMoves)) {
-            return TraversalResult::withoutMove($this->makeLeafEvaluation());
+            return TraversalResult::withoutMove($this->makeLeafEvaluation(), Analytics::forLeafNode());
         }
 
+        $analytics = Analytics::forInternalNode();
         $idealMove = null;
         $idealMoveResult = null;
         foreach ($possibleMoves as $move) {
@@ -84,6 +85,7 @@ class DecisionNode
             }
 
             $moveResult = $this->getChildResult($move);
+            $analytics->add($moveResult->analytics);
             $this->alphaBeta->update($moveResult->evaluation, $this->type);
             if ($idealMoveResult === null || $this->isIdealOver($moveResult->evaluation, $idealMoveResult->evaluation)) {
                 $idealMove = $move;
@@ -91,7 +93,7 @@ class DecisionNode
             }
         }
 
-        return TraversalResult::create($idealMove, $idealMoveResult->evaluation);
+        return TraversalResult::create($idealMove, $idealMoveResult->evaluation, $analytics);
     }
 
     /**
