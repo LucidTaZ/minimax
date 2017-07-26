@@ -21,6 +21,12 @@ class Engine
     private $maxDepth;
 
     /**
+     * @var ?Analytics Only available after run, contains statistics about the
+     * execution.
+     */
+    private $analytics;
+
+    /**
      * @param Player $objectivePlayer The player to play as
      * @param int $maxDepth How far ahead should the engine look?
      */
@@ -42,16 +48,28 @@ class Engine
         if (!$state->getNextPlayer()->equals($this->objectivePlayer)) {
             throw new BadMethodCallException('It is not this players turn');
         }
-        $topLevelNode = new DecisionPoint(
+        if (empty($state->getPossibleMoves())) {
+            throw new RuntimeException('There are no possible moves');
+        }
+
+        $rootNode = new DecisionNode(
             $this->objectivePlayer,
             $state,
             $this->maxDepth,
-            DecisionWithScore::getBestComparator()
+            NodeType::MAX(),
+            AlphaBeta::initial()
         );
-        $decisionWithScore = $topLevelNode->decide();
-        if ($decisionWithScore->decision === null) {
-            throw new RuntimeException('There are no possible moves');
+
+        $moveWithEvaluation = $rootNode->traverseGameTree();
+        $this->analytics = $moveWithEvaluation->analytics;
+        return $moveWithEvaluation->move;
+    }
+
+    public function getAnalytics(): Analytics
+    {
+        if ($this->analytics === null) {
+            throw new BadMethodCallException('Please run decide() first.');
         }
-        return $decisionWithScore->decision;
+        return $this->analytics;
     }
 }

@@ -101,4 +101,12 @@ class Board
             }
         }
     }
+
+    public function __toString(): string
+    {
+        return
+            "{$this->cells[0][0]}{$this->cells[0][1]}{$this->cells[0][2]}\n" .
+            "{$this->cells[1][0]}{$this->cells[1][1]}{$this->cells[1][2]}\n" .
+            "{$this->cells[2][0]}{$this->cells[2][1]}{$this->cells[2][2]}\n";
+    }
 }

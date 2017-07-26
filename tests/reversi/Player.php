@@ -1,6 +1,6 @@
 <?php
 
-namespace lucidtaz\minimax\tests\tictactoe;
+namespace lucidtaz\minimax\tests\reversi;
 
 use lucidtaz\minimax\game\Player as PlayerInterface;
 
@@ -15,17 +15,17 @@ class Player implements PlayerInterface
         return $result;
     }
 
-    public static function X(): Player
+    public static function BLUE(): Player
     {
         $result = new Player;
-        $result->sign = 'x';
+        $result->sign = 'B';
         return $result;
     }
 
-    public static function O(): Player
+    public static function RED(): Player
     {
         $result = new Player;
-        $result->sign = 'o';
+        $result->sign = 'R';
         return $result;
     }
 
@@ -43,10 +43,5 @@ class Player implements PlayerInterface
     public function isFriendsWith(PlayerInterface $other): bool
     {
         return $this->equals($other);
-    }
-
-    public function __toString(): string
-    {
-        return $this->sign;
     }
 }
