@@ -50,84 +50,56 @@ class DecisionNode
     }
 
     /**
-     * Determine the ideal decision for this node
+     * Determine the ideal move for this node
      * This means either the best or the worst possible outcome for the
      * objective player, based on who is actually playing. (If the objective
      * player is currently playing, we take the best outcome, otherwise we take
      * the worst. This reflects that the opponent also plays optimally.)
-     * @return DecisionWithScore
      */
-    public function decide(): DecisionWithScore
+    public function traverseGameTree(): TraversalResult
     {
         if ($this->depthLeft == 0) {
-            return $this->makeLeafResult();
+            return TraversalResult::onlyEvaluation($this->makeLeafResult());
         }
 
         /* @var $possibleMoves GameState[] */
         $possibleMoves = $this->state->getPossibleMoves();
         if (empty($possibleMoves)) {
-            return $this->makeLeafResult();
+            return TraversalResult::onlyEvaluation($this->makeLeafResult());
         }
 
-        $bestDecisionWithScore = null;
+        $idealResult = null;
+        $idealMove = null;
         foreach ($possibleMoves as $move) {
-            $bestDecisionWithScore = $this->evaluateMove($move, $bestDecisionWithScore);
+            $moveResult = $this->getChildResult($move);
+
+            if ($idealResult === null || $this->isIdealOver($moveResult, $idealResult)) {
+                $idealResult = $moveResult;
+                $idealMove = $move;
+            }
         }
 
-        return $bestDecisionWithScore;
+        return TraversalResult::create($idealMove, $idealResult);
     }
 
     /**
-     * Formulate the resulting decision, considering we do not look any further
-     * The reason for not looking further can either be due to hitting the
-     * recursion limit or because the game has actually concluded.
-     * @return DecisionWithScore
+     * Formulate the evaluation result, this node being a leaf node
      */
-    private function makeLeafResult(): DecisionWithScore
+    private function makeLeafResult(): EvaluationResult
     {
-        $result = new DecisionWithScore;
+        $result = new EvaluationResult();
         $result->age = $this->depthLeft;
         $result->score = $this->state->evaluateScore($this->objectivePlayer);
         return $result;
     }
 
     /**
-     * Apply a move and evaluate the outcome
-     * @param GameState $stateAfterMove The result of taking the move
-     * @param DecisionWithScore $bestResultSoFar Best result encountered so far.
-     * @todo Can probably be cleaned up by moving that logic to the caller.
-     * @return DecisionWithScore
-     */
-    private function evaluateMove(
-        GameState $stateAfterMove,
-        DecisionWithScore $bestResultSoFar = null
-    ): DecisionWithScore {
-        $childResult = $this->buildAndEvaluateChildNode($stateAfterMove);
-
-        $replaced = false;
-        $bestResult = $this->replaceIfBetter(
-            $childResult,
-            $bestResultSoFar,
-            $replaced
-        );
-        if ($replaced) {
-            // Register that the decision was reached by applying the currently
-            // evaluated move. We cannot get this decision (GameState) from the
-            // result itself, because it's already many levels deeper in the
-            // game tree.
-            $bestResult->decision = $stateAfterMove;
-        }
-
-        return $bestResult;
-    }
-
-    /**
      * Recursively evaluate a child decision
+     * Apply a move and evaluate the outcome
      * @param GameState $stateAfterMove The GameState that was created as a
-     * result of the current move.
-     * @return DecisionWithScore
+     * result of a possible move.
      */
-    private function buildAndEvaluateChildNode(GameState $stateAfterMove): DecisionWithScore
+    private function getChildResult(GameState $stateAfterMove): EvaluationResult
     {
         $nextPlayerIsFriendly = $stateAfterMove->getNextPlayer()->isFriendsWith($this->objectivePlayer);
         $nextDecisionPoint = new static(
@@ -136,38 +108,20 @@ class DecisionNode
             $this->depthLeft - 1,
             $nextPlayerIsFriendly ? $this->type : $this->type->alternate()
         );
-        return $nextDecisionPoint->decide();
+        return $nextDecisionPoint->traverseGameTree()->evaluation;
     }
 
     /**
-     * Take the best of the two operands
+     * Compare two evaluation results
      * The meaning of "best" is decided by the "ideal" member variable
      * comparator
-     * @param DecisionWithScore $new
-     * @param DecisionWithScore $current
-     * @param bool $replaced Set to true if the second operand was better
-     * @return DecisionWithScore
      */
-    private function replaceIfBetter(
-        DecisionWithScore $new,
-        DecisionWithScore $current = null,
-        &$replaced = false
-    ): DecisionWithScore {
-        if ($current === null) {
-            $replaced = true;
-            return $new;
-        }
-
+    private function isIdealOver(EvaluationResult $a, EvaluationResult $b): bool
+    {
         $ideal = $this->type == NodeType::MIN()
-            ? DecisionWithScore::getWorstComparator()
-            : DecisionWithScore::getBestComparator();
-        $idealDecisionWithScore = $ideal($new, $current);
-        if ($idealDecisionWithScore === $new) {
-            $replaced = true;
-            return $new;
-        }
-
-        $replaced = false;
-        return $current;
+            ? EvaluationResult::getWorstComparator()
+            : EvaluationResult::getBestComparator();
+        $idealEvaluationResult = $ideal($a, $b);
+        return $idealEvaluationResult > 0;
     }
 }

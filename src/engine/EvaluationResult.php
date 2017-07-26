@@ -3,21 +3,15 @@
 namespace lucidtaz\minimax\engine;
 
 use Closure;
-use lucidtaz\minimax\game\GameState;
 
 /**
- * Value object containing a decision and its resulting score
+ * Value object containing the result of a decision tree node evaluation
  * These two concepts are used together so often that it warrants a separate
  * class to be able to carry them around easily.
  */
-class DecisionWithScore
+class EvaluationResult
 {
     const EPSILON = 0.00001;
-
-    /**
-     * @var GameState
-     */
-    public $decision = null;
 
     /**
      * @var float Score that results from applying the decision
@@ -32,7 +26,7 @@ class DecisionWithScore
      */
     public $age;
 
-    public function isBetterThan(DecisionWithScore $other): bool
+    public function isBetterThan(EvaluationResult $other): bool
     {
         if (abs($this->score - $other->score) < self::EPSILON) {
             // Scores are considered the same, prefer earliest decision. (Shallowest node)
@@ -43,15 +37,15 @@ class DecisionWithScore
 
     public static function getBestComparator(): Closure
     {
-        return function (DecisionWithScore $a, DecisionWithScore $b) {
-            return $a->isBetterThan($b) ? $a : $b;
+        return function (EvaluationResult $a, EvaluationResult $b) {
+            return $a->isBetterThan($b) ? 1 : -1;
         };
     }
 
     public static function getWorstComparator(): Closure
     {
-        return function (DecisionWithScore $a, DecisionWithScore $b) {
-            return $b->isBetterThan($a) ? $a : $b;
+        return function (EvaluationResult $a, EvaluationResult $b) {
+            return $b->isBetterThan($a) ? 1 : -1;
         };
     }
 }

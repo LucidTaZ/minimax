@@ -42,16 +42,18 @@ class Engine
         if (!$state->getNextPlayer()->equals($this->objectivePlayer)) {
             throw new BadMethodCallException('It is not this players turn');
         }
-        $topLevelNode = new DecisionNode(
+        if (empty($state->getPossibleMoves())) {
+            throw new RuntimeException('There are no possible moves');
+        }
+
+        $rootNode = new DecisionNode(
             $this->objectivePlayer,
             $state,
             $this->maxDepth,
             NodeType::MAX()
         );
-        $decisionWithScore = $topLevelNode->decide();
-        if ($decisionWithScore->decision === null) {
-            throw new RuntimeException('There are no possible moves');
-        }
-        return $decisionWithScore->decision;
+
+        $moveWithEvaluation = $rootNode->traverseGameTree();
+        return $moveWithEvaluation->move;
     }
 }
