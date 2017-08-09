@@ -152,6 +152,9 @@ class GameState implements GameStateInterface
                     // We found our anchor piece, move becomes valid
                     yield [$anchorCellX, $anchorCellY];
                     break;
+                } elseif (!$this->board->isOwnedBy($anchorCellY, $anchorCellX, $opponent)) {
+                    // Inspected field is not occupied by us nor the opponent, so it's an empty field
+                    break;
                 }
             }
         }
