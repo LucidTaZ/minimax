@@ -65,7 +65,7 @@ class GameState implements GameStateInterface
     private function capturePieces(int $moveRow, int $moveColumn, Generator $anchorPieces)
     {
         foreach ($anchorPieces as $anchorPiece) {
-            list($anchorRow, $anchorColumn) = $anchorPiece;
+            list($anchorColumn, $anchorRow) = $anchorPiece;
             $dY = $anchorRow <=> $moveRow;
             $dX = $anchorColumn <=> $moveColumn;
 
@@ -148,7 +148,7 @@ class GameState implements GameStateInterface
                 $anchorCellX = $column + $directionX * $i;
                 $anchorCellY = $row + $directionY * $i;
 
-                if ($this->board->isOwnedBy($anchorCellX, $anchorCellY, $this->turn)) {
+                if ($this->board->isOwnedBy($anchorCellY, $anchorCellX, $this->turn)) {
                     // We found our anchor piece, move becomes valid
                     yield [$anchorCellX, $anchorCellY];
                     break;
