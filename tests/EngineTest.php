@@ -277,4 +277,15 @@ class EngineTest extends PHPUnit_Framework_TestCase
         $this->expectException(RuntimeException::class);
         $engine->decide($state);
     }
+
+    public function testExceptionWhenInvalidMaxDepth()
+    {
+        $X = Player::X();
+
+        $state = new GameState();
+        $engine = new Engine($X, 0);
+
+        $this->expectException(LogicException::class);
+        $engine->decide($state);
+    }
 }

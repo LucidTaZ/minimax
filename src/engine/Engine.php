@@ -3,6 +3,7 @@
 namespace lucidtaz\minimax\engine;
 
 use BadMethodCallException;
+use LogicException;
 use lucidtaz\minimax\game\GameState;
 use lucidtaz\minimax\game\Player;
 use RuntimeException;
@@ -62,6 +63,9 @@ class Engine
 
         $moveWithEvaluation = $rootNode->traverseGameTree();
         $this->analytics = $moveWithEvaluation->analytics;
+        if ($moveWithEvaluation->move === null) {
+            throw new LogicException('Could not find move even though there are moves. Is the maxdepth parameter correct?');
+        }
         return $moveWithEvaluation->move;
     }
 
