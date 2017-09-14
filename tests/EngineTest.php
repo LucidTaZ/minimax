@@ -8,10 +8,11 @@ use lucidtaz\minimax\tests\tictactoe\Board;
 use lucidtaz\minimax\tests\tictactoe\GameState;
 use lucidtaz\minimax\tests\tictactoe\Player;
 use lucidtaz\minimax\tests\tictactoe\ShuffledDecisionsGameState;
-use PHPUnit_Framework_TestCase;
+use lucidtaz\minimax\tests\tictactoe\ZeroScoresGameState;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class EngineTest extends PHPUnit_Framework_TestCase
+class EngineTest extends TestCase
 {
     public function testEngineDecides()
     {
@@ -27,7 +28,7 @@ class EngineTest extends PHPUnit_Framework_TestCase
     public function testEngineDecidesWhenAllScoresZero()
     {
         // Regression test: it used to say "no possible moves".
-        $cleanState = new tictactoe\ZeroScoresGameState();
+        $cleanState = new ZeroScoresGameState();
         $engine = new Engine(Player::X());
 
         $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
