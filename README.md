@@ -41,4 +41,5 @@ $gameState = new MyGameState(...);
 $newGameState = $engine->decide($gameState);
 ```
 
-For an example, see the `tests/tictactoe` directory.
+For an example, see the `tests/tictactoe` directory or any of the other sample
+game implementations in `tests/`.
