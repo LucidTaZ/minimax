@@ -21,10 +21,10 @@ namespace lucidtaz\minimax\tests\tictactoe;
  */
 class ShuffledDecisionsGameState extends GameState
 {
-    public function getDecisions(): array
+    public function getPossibleMoves(): array
     {
-        $decisions = parent::getDecisions();
-        shuffle($decisions);
-        return $decisions;
+        $moves = parent::getPossibleMoves();
+        shuffle($moves);
+        return $moves;
     }
 }
