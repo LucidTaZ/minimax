@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Support for PHP 7.3 is added. No code change was done for this, just QA.
+
+### Removed
+- Support for PHP 7.0 is dropped, since it's no longer officially supported.
+
+### Changed
+- (Dev) dependencies have been updated.
+
 ## [0.2.0] - 2017-07-26
 ### Added
 - Alpha-beta pruning for faster results
