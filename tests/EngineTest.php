@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace lucidtaz\minimax\tests;
 
+use BadMethodCallException;
 use LogicException;
 use lucidtaz\minimax\engine\Engine;
 use lucidtaz\minimax\tests\tictactoe\Board;
@@ -290,5 +291,17 @@ class EngineTest extends TestCase
 
         $this->expectException(LogicException::class);
         $engine->decide($state);
+    }
+
+    public function testExceptionWhenGettingAnalyticsBeforeRunning(): void
+    {
+        $X = Player::X();
+
+        $engine = new Engine($X, 0);
+
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Please run decide() first.');
+
+        $engine->getAnalytics();
     }
 }

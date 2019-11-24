@@ -50,9 +50,4 @@ class AlphaBeta
     {
         return $this->alpha < $this->beta;
     }
-
-    public function __toString(): string
-    {
-        return "($this->alpha, $this->beta)";
-    }
 }
