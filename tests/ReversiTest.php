@@ -6,7 +6,7 @@ namespace lucidtaz\minimax\tests;
 
 use BadMethodCallException;
 use lucidtaz\minimax\engine\Engine;
-use lucidtaz\minimax\tests\reversi\GameState;
+use lucidtaz\minimax\tests\reversi\GameState as ReversiGameState;
 use lucidtaz\minimax\tests\reversi\Player;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ class ReversiTest extends TestCase
 {
     public function testReversiDetectsIllegalMovesNoNeighbors(): void
     {
-        $state = new GameState;
+        $state = new ReversiGameState();
 
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('Illegal move');
@@ -29,7 +29,7 @@ class ReversiTest extends TestCase
 
     public function testReversiDetectsIllegalMovesOwnNeighbor(): void
     {
-        $state = new GameState;
+        $state = new ReversiGameState();
 
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('Illegal move');
@@ -41,7 +41,7 @@ class ReversiTest extends TestCase
         $BLUE = Player::BLUE();
         $RED = Player::RED();
 
-        $state = new GameState();
+        $state = new ReversiGameState();
         $this->assertEquals(2, $state->board->countOwnedCells($BLUE), 'Test precondition');
         $this->assertEquals(2, $state->board->countOwnedCells($RED), 'Test precondition');
         $this->assertEquals($BLUE, $state->getNextPlayer(), 'Test precondition');
@@ -59,13 +59,13 @@ class ReversiTest extends TestCase
         $BLUE = Player::BLUE();
         $RED = Player::RED();
 
-        $state = new GameState();
+        $state = new ReversiGameState();
         $this->assertEquals(2, $state->board->countOwnedCells($BLUE), 'Test precondition');
         $this->assertEquals(2, $state->board->countOwnedCells($RED), 'Test precondition');
         $this->assertEquals($BLUE, $state->getNextPlayer(), 'Test precondition');
 
         $engine = new Engine($BLUE);
-        /* @var $newState GameState */
+        /** @var ReversiGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertEquals(4, $newState->board->countOwnedCells($BLUE), 'Blue cell count increased');
@@ -97,13 +97,13 @@ class ReversiTest extends TestCase
         $RED = Player::RED();
         $maxDepth = 3;
 
-        $state = new GameState();
+        $state = new ReversiGameState();
         $this->assertEquals(2, $state->board->countOwnedCells($BLUE), 'Test precondition');
         $this->assertEquals(2, $state->board->countOwnedCells($RED), 'Test precondition');
         $this->assertEquals($BLUE, $state->getNextPlayer(), 'Test precondition');
 
         $engine = new Engine($BLUE, $maxDepth);
-        /* @var $newState GameState */
+        /** @var ReversiGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertEquals(4, $newState->board->countOwnedCells($BLUE), 'Blue cell count increased');

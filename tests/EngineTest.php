@@ -7,7 +7,7 @@ namespace lucidtaz\minimax\tests;
 use LogicException;
 use lucidtaz\minimax\engine\Engine;
 use lucidtaz\minimax\tests\tictactoe\Board;
-use lucidtaz\minimax\tests\tictactoe\GameState;
+use lucidtaz\minimax\tests\tictactoe\GameState as TicTacToeGameState;
 use lucidtaz\minimax\tests\tictactoe\Player;
 use lucidtaz\minimax\tests\tictactoe\ShuffledDecisionsGameState;
 use lucidtaz\minimax\tests\tictactoe\ZeroScoresGameState;
@@ -18,11 +18,11 @@ class EngineTest extends TestCase
 {
     public function testEngineDecides(): void
     {
-        $cleanState = new GameState;
+        $cleanState = new TicTacToeGameState();
         $engine = new Engine(Player::X());
 
         $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($cleanState);
         $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
@@ -34,7 +34,7 @@ class EngineTest extends TestCase
         $engine = new Engine(Player::X());
 
         $this->assertEquals(0, $this->countFilledFields($cleanState->board), 'Test precondition');
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($cleanState);
         $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
@@ -56,7 +56,7 @@ class EngineTest extends TestCase
     {
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // XX
         //  O
         //   O
@@ -66,7 +66,7 @@ class EngineTest extends TestCase
         $state->makeMove(2, 2); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
@@ -80,7 +80,7 @@ class EngineTest extends TestCase
         // solutions that were found earlier.
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // O
         //  O
         //  XX
@@ -90,7 +90,7 @@ class EngineTest extends TestCase
         $state->makeMove(0, 0); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
@@ -100,7 +100,7 @@ class EngineTest extends TestCase
     {
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // X
         // X
         // OO
@@ -110,7 +110,7 @@ class EngineTest extends TestCase
         $state->makeMove(2, 1); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Lower-right field must be taken by X');
@@ -121,7 +121,7 @@ class EngineTest extends TestCase
         // Rotated version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // OXX
         // O
         //
@@ -131,7 +131,7 @@ class EngineTest extends TestCase
         $state->makeMove(1, 0); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
@@ -141,7 +141,7 @@ class EngineTest extends TestCase
     {
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // O X
         //  O
         // X
@@ -151,7 +151,7 @@ class EngineTest extends TestCase
         $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Bottom-right field must be taken by X');
@@ -162,7 +162,7 @@ class EngineTest extends TestCase
         // Rotated version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // X O
         //  O
         //   X
@@ -172,7 +172,7 @@ class EngineTest extends TestCase
         $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
@@ -183,7 +183,7 @@ class EngineTest extends TestCase
         // Randomly ordered decisions version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
 
-        $state = new ShuffledDecisionsGameState;
+        $state = new ShuffledDecisionsGameState();
         // X O
         //  O
         //   X
@@ -193,7 +193,7 @@ class EngineTest extends TestCase
         $state->makeMove(1, 1); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
@@ -205,7 +205,7 @@ class EngineTest extends TestCase
         $X = Player::X();
         $O = Player::O();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
 
         // Note: This test (when confronted with a random shuffle in the
         // decision order) depends on high enough maxDepth values
@@ -216,7 +216,7 @@ class EngineTest extends TestCase
             $state = $engineX->decide($state);
             $state = $engineO->decide($state);
         }
-        /* @var $state GameState */
+        /** @var TicTacToeGameState $state */
         $state = $engineX->decide($state);
 
         $this->assertEquals(9, $this->countFilledFields($state->board), 'All fields must be full');
@@ -228,7 +228,7 @@ class EngineTest extends TestCase
     {
         $X = Player::X();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // OXX
         //  OO
         // XOX
@@ -242,7 +242,7 @@ class EngineTest extends TestCase
         $state->makeMove(1, 2); // O
 
         $engine = new Engine($X);
-        /* @var $newState GameState */
+        /** @var TicTacToeGameState $newState */
         $newState = $engine->decide($state);
 
         $this->assertTrue($newState->board->getField(1, 0)->equals($X), 'Middle-left field must be taken by X');
@@ -250,7 +250,7 @@ class EngineTest extends TestCase
 
     public function testExceptionWhenNotOurTurn(): void
     {
-        $cleanState = new GameState;
+        $cleanState = new TicTacToeGameState();
         $engine = new Engine(Player::O());
 
         $this->expectException(LogicException::class);
@@ -261,7 +261,7 @@ class EngineTest extends TestCase
     {
         $O = Player::O();
 
-        $state = new GameState;
+        $state = new TicTacToeGameState();
         // OXX
         // XOO
         // XOX
@@ -285,7 +285,7 @@ class EngineTest extends TestCase
     {
         $X = Player::X();
 
-        $state = new GameState();
+        $state = new TicTacToeGameState();
         $engine = new Engine($X, 0);
 
         $this->expectException(LogicException::class);

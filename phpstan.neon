@@ -1,0 +1,6 @@
+parameters:
+    inferPrivatePropertyTypeFromConstructor: true
+    ignoreErrors:
+        # It thinks that int + int * int is float|int
+        - message: '#expects int\, float\|int given#'
+          path: %currentWorkingDirectory%/tests/*
