@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests\reversi;
 
 use BadMethodCallException;
@@ -37,7 +39,7 @@ class GameState implements GameStateInterface
         $this->turn = clone $this->turn;
     }
 
-    public function makeMove(int $row, int $column)
+    public function makeMove(int $row, int $column): void
     {
         if (!$this->isLegalMove($row, $column)) {
             throw new BadMethodCallException('Illegal move');
@@ -52,7 +54,7 @@ class GameState implements GameStateInterface
         $this->proceedPlayer();
     }
 
-    public function pass()
+    public function pass(): void
     {
         if ($this->lastPlayerPassed) {
             throw new BadMethodCallException('Cannot pass after the previous player passed.');
@@ -62,17 +64,16 @@ class GameState implements GameStateInterface
         $this->proceedPlayer();
     }
 
-    private function capturePieces(int $moveRow, int $moveColumn, Generator $anchorPieces)
+    private function capturePieces(int $moveRow, int $moveColumn, Generator $anchorPieces): void
     {
-        foreach ($anchorPieces as $anchorPiece) {
-            list($anchorColumn, $anchorRow) = $anchorPiece;
+        foreach ($anchorPieces as [$anchorColumn, $anchorRow]) {
             $dY = $anchorRow <=> $moveRow;
             $dX = $anchorColumn <=> $moveColumn;
 
             for ($i = 1; $i < 8; $i++) {
                 $captureFieldX = $moveColumn + $dX * $i;
                 $captureFieldY = $moveRow + $dY * $i;
-                if ($captureFieldX == $anchorColumn && $captureFieldY == $anchorRow) {
+                if ($captureFieldX === $anchorColumn && $captureFieldY === $anchorRow) {
                     break;
                 }
                 $this->board->fillField($captureFieldY, $captureFieldX, $this->turn);
@@ -80,7 +81,7 @@ class GameState implements GameStateInterface
         }
     }
 
-    private function proceedPlayer()
+    private function proceedPlayer(): void
     {
         if ($this->turn->equals(Player::BLUE())) {
             $this->turn = Player::RED();
@@ -104,8 +105,7 @@ class GameState implements GameStateInterface
     public function getPossibleMoves(): array
     {
         $possibleMoves = [];
-        foreach ($this->board->getEmptyFields() as $emptyField) {
-            list($row, $col) = $emptyField;
+        foreach ($this->board->getEmptyFields() as [$row, $col]) {
             if ($this->isLegalMove($row, $col)) {
                 $stateAfterMove = clone $this;
                 $stateAfterMove->makeMove($row, $col);
@@ -134,8 +134,7 @@ class GameState implements GameStateInterface
         $opponent = $this->turn->equals(Player::BLUE()) ? Player::RED() : Player::BLUE();
 
         // Check all eight directions for an opponent piece
-        foreach ($this->enumerateDirections() as $direction) {
-            list($directionX, $directionY) = $direction;
+        foreach ($this->enumerateDirections() as [$directionX, $directionY]) {
             $inspectCellX = $column + $directionX;
             $inspectCellY = $row + $directionY;
 
@@ -164,7 +163,7 @@ class GameState implements GameStateInterface
     {
         for ($directionX = -1; $directionX <= 1; $directionX++) {
             for ($directionY = -1; $directionY <= 1; $directionY++) {
-                if ($directionX != 0 || $directionY != 0) {
+                if ($directionX !== 0 || $directionY !== 0) {
                     yield [$directionX, $directionY];
                 }
             }

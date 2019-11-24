@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests;
 
 use LogicException;
@@ -14,7 +16,7 @@ use RuntimeException;
 
 class EngineTest extends TestCase
 {
-    public function testEngineDecides()
+    public function testEngineDecides(): void
     {
         $cleanState = new GameState;
         $engine = new Engine(Player::X());
@@ -25,7 +27,7 @@ class EngineTest extends TestCase
         $this->assertEquals(1, $this->countFilledFields($newState->board));
     }
 
-    public function testEngineDecidesWhenAllScoresZero()
+    public function testEngineDecidesWhenAllScoresZero(): void
     {
         // Regression test: it used to say "no possible moves".
         $cleanState = new ZeroScoresGameState();
@@ -50,7 +52,7 @@ class EngineTest extends TestCase
         return $count;
     }
 
-    public function testEngineTakesAWin1()
+    public function testEngineTakesAWin1(): void
     {
         $X = Player::X();
 
@@ -70,7 +72,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(0, 2)->equals($X), 'Upper-right field must be taken by X');
     }
 
-    public function testEngineTakesAWin2()
+    public function testEngineTakesAWin2(): void
     {
         // Rotated version of another test, to rule out accidental, unstrategic wins
         // If this test fails, it may be due to an alternative win in two turns,
@@ -94,7 +96,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
 
-    public function testEnginePreventsALoss1()
+    public function testEnginePreventsALoss1(): void
     {
         $X = Player::X();
 
@@ -114,7 +116,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Lower-right field must be taken by X');
     }
 
-    public function testEnginePreventsALoss2()
+    public function testEnginePreventsALoss2(): void
     {
         // Rotated version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
@@ -135,7 +137,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Lower-left field must be taken by X');
     }
 
-    public function testEngineForcesAWin1()
+    public function testEngineForcesAWin1(): void
     {
         $X = Player::X();
 
@@ -155,7 +157,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(2, 2)->equals($X), 'Bottom-right field must be taken by X');
     }
 
-    public function testEngineForcesAWin2()
+    public function testEngineForcesAWin2(): void
     {
         // Rotated version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
@@ -176,7 +178,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
 
-    public function testEngineForcesAWin3()
+    public function testEngineForcesAWin3(): void
     {
         // Randomly ordered decisions version of another test, to rule out accidental, unstrategic wins
         $X = Player::X();
@@ -197,7 +199,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(2, 0)->equals($X), 'Bottom-left field must be taken by X');
     }
 
-    public function testEnginePlaysAgainstItself()
+    public function testEnginePlaysAgainstItself(): void
     {
         // Tic Tac Toe Minimax against itself should always result in a draw
         $X = Player::X();
@@ -222,7 +224,7 @@ class EngineTest extends TestCase
         $this->assertEquals(0, $state->evaluateScore($O), 'Player O must not win');
     }
 
-    public function testEngineHandlesOneDrawOption()
+    public function testEngineHandlesOneDrawOption(): void
     {
         $X = Player::X();
 
@@ -246,7 +248,7 @@ class EngineTest extends TestCase
         $this->assertTrue($newState->board->getField(1, 0)->equals($X), 'Middle-left field must be taken by X');
     }
 
-    public function testExceptionWhenNotOurTurn()
+    public function testExceptionWhenNotOurTurn(): void
     {
         $cleanState = new GameState;
         $engine = new Engine(Player::O());
@@ -255,7 +257,7 @@ class EngineTest extends TestCase
         $engine->decide($cleanState);
     }
 
-    public function testExceptionWhenNoMovesLeft()
+    public function testExceptionWhenNoMovesLeft(): void
     {
         $O = Player::O();
 
@@ -279,7 +281,7 @@ class EngineTest extends TestCase
         $engine->decide($state);
     }
 
-    public function testExceptionWhenInvalidMaxDepth()
+    public function testExceptionWhenInvalidMaxDepth(): void
     {
         $X = Player::X();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\game;
 
 /**
@@ -9,8 +11,10 @@ interface GameState
 {
     /**
      * Give possible moves from the current state
+     *
      * Do this by applying every possible decision on the current state,
      * returning the resulting game states.
+     *
      * @return GameState[]
      */
     public function getPossibleMoves(): array;

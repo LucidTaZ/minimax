@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests\tictactoe;
 
 use lucidtaz\minimax\game\Player as PlayerInterface;

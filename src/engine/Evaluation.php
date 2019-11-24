@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\engine;
 
 use Closure;
@@ -11,7 +13,7 @@ use Closure;
  */
 class Evaluation
 {
-    const EPSILON = 0.00001;
+    private const EPSILON = 0.00001;
 
     /**
      * @var float Score that results from applying the decision
@@ -37,14 +39,14 @@ class Evaluation
 
     public static function getBestComparator(): Closure
     {
-        return function (Evaluation $a, Evaluation $b) {
+        return static function (Evaluation $a, Evaluation $b) {
             return $a->isBetterThan($b) ? 1 : -1;
         };
     }
 
     public static function getWorstComparator(): Closure
     {
-        return function (Evaluation $a, Evaluation $b) {
+        return static function (Evaluation $a, Evaluation $b) {
             return $b->isBetterThan($a) ? 1 : -1;
         };
     }

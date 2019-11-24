@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests\reversi;
 
 use Generator;
@@ -21,7 +23,7 @@ class Board
         $this->placeStartingTokens();
     }
 
-    private function initializeEmptyFields()
+    private function initializeEmptyFields(): void
     {
         $none = Player::NONE();
         for ($row = 0; $row < 8; $row++) {
@@ -31,7 +33,7 @@ class Board
         }
     }
 
-    private function placeStartingTokens()
+    private function placeStartingTokens(): void
     {
         $this->cells[3][3] = Player::BLUE();
         $this->cells[3][4] = Player::RED();
@@ -46,14 +48,15 @@ class Board
 
     /**
      * Tells which player owns the specified field
-     * Player::NONE() in case the field is not owned.
+     *
+     * Returns Player::NONE() in case the field is not owned.
      */
-    public function getField($row, $column): Player
+    public function getField(int $row, int $column): Player
     {
         return $this->cells[$row][$column];
     }
 
-    public function fillField(int $row, int $column, Player $owner)
+    public function fillField(int $row, int $column, Player $owner): void
     {
         $this->cells[$row][$column] = $owner;
     }
@@ -77,8 +80,8 @@ class Board
             return false;
         }
 
-        $neighbordField = $this->getField($row, $column);
-        return $neighbordField->equals($player);
+        $neighborField = $this->getField($row, $column);
+        return $neighborField->equals($player);
     }
 
     /**

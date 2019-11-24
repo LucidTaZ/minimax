@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests\tictactoe;
 
 use lucidtaz\minimax\game\GameState as GameStateInterface;
@@ -42,13 +44,13 @@ class GameState implements GameStateInterface
         $this->turn = clone $this->turn;
     }
 
-    public function makeMove(int $row, int $column)
+    public function makeMove(int $row, int $column): void
     {
         $this->board->fillField($row, $column, $this->turn);
         $this->proceedPlayer();
     }
 
-    private function proceedPlayer()
+    private function proceedPlayer(): void
     {
         if ($this->turn->equals(Player::X())) {
             $this->turn = Player::O();
@@ -103,8 +105,7 @@ class GameState implements GameStateInterface
             return [];
         }
         $possibleMoves = [];
-        foreach ($this->board->getEmptyFields() as $emptyField) {
-            list($row, $col) = $emptyField;
+        foreach ($this->board->getEmptyFields() as [$row, $col]) {
             $stateAfterMove = clone $this;
             $stateAfterMove->makeMove($row, $col);
             $possibleMoves[] = $stateAfterMove;

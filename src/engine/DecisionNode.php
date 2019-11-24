@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\engine;
 
 use lucidtaz\minimax\game\GameState;
@@ -7,6 +9,7 @@ use lucidtaz\minimax\game\Player;
 
 /**
  * Node in the decision search tree
+ *
  * An object of this class can be queried for its ideal decision (and according
  * score) by calling the decide() method. It will recursively construct child
  * nodes and evaluate them using that method as well.
@@ -58,6 +61,7 @@ class DecisionNode
 
     /**
      * Determine the ideal move for this node
+     *
      * This means either the best or the worst possible outcome for the
      * objective player, based on who is actually playing. (If the objective
      * player is currently playing, we take the best outcome, otherwise we take
@@ -65,11 +69,10 @@ class DecisionNode
      */
     public function traverseGameTree(): TraversalResult
     {
-        if ($this->depthLeft == 0) {
+        if ($this->depthLeft === 0) {
             return TraversalResult::withoutMove($this->makeLeafEvaluation(), Analytics::forLeafNode());
         }
 
-        /* @var $possibleMoves GameState[] */
         $possibleMoves = $this->state->getPossibleMoves();
         if (empty($possibleMoves)) {
             return TraversalResult::withoutMove($this->makeLeafEvaluation(), Analytics::forLeafNode());
@@ -109,7 +112,9 @@ class DecisionNode
 
     /**
      * Recursively evaluate a child decision
+     *
      * Apply a move and evaluate the outcome
+     *
      * @param GameState $stateAfterMove The GameState that was created as a
      * result of a possible move.
      */
@@ -128,6 +133,7 @@ class DecisionNode
 
     /**
      * Compare two evaluations
+     *
      * The meaning of "best" is decided by the "ideal" member variable
      * comparator
      */

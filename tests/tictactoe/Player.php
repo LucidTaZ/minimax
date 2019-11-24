@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests\tictactoe;
 
 use lucidtaz\minimax\game\Player as PlayerInterface;
@@ -34,7 +36,7 @@ class Player implements PlayerInterface
      */
     public function equals(PlayerInterface $other): bool
     {
-        return $other->sign == $this->sign;
+        return is_a($other, self::class) && $other->sign === $this->sign;
     }
 
     /**

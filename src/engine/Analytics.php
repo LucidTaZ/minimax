@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\engine;
 
 /**
@@ -45,7 +47,7 @@ class Analytics
         return $result;
     }
 
-    public function add(Analytics $that)
+    public function add(Analytics $that): void
     {
         $this->nodesEvaluated += $that->nodesEvaluated;
         $this->leafNodesEvaluated += $that->leafNodesEvaluated;

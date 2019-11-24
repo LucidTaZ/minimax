@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\engine;
 
 use BadMethodCallException;
@@ -22,14 +24,15 @@ class Engine
     private $maxDepth;
 
     /**
-     * @var ?Analytics Only available after run, contains statistics about the
+     * @var Analytics|null Only available after run, contains statistics about the
      * execution.
      */
     private $analytics;
 
     /**
-     * @param Player $objectivePlayer The player to play as
-     * @param int $maxDepth How far ahead should the engine look?
+     * @param Player $objectivePlayer The player to play as. The engine will try
+     * to maximize this player's score.
+     * @param int $maxDepth How many turns ahead should the engine look?
      */
     public function __construct(Player $objectivePlayer, int $maxDepth = 3)
     {
@@ -39,6 +42,7 @@ class Engine
 
     /**
      * Evaluate possible decisions and take the best one
+     *
      * @param GameState $state Current state of the game for which there needs
      * to be made a decision. This implicitly means that the objective player
      * currently must have its turn in the GameState.
@@ -64,7 +68,7 @@ class Engine
         $moveWithEvaluation = $rootNode->traverseGameTree();
         $this->analytics = $moveWithEvaluation->analytics;
         if ($moveWithEvaluation->move === null) {
-            throw new LogicException('Could not find move even though there are moves. Is the maxdepth parameter correct?');
+            throw new LogicException('Could not find move even though there are moves. Is the maxDepth parameter correct?');
         }
         return $moveWithEvaluation->move;
     }

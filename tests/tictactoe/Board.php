@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests\tictactoe;
 
 use Generator;
@@ -27,14 +29,15 @@ class Board
 
     /**
      * Tells which player owns the specified field
-     * Player::NONE() in case the field is not owned.
+     *
+     * Returns Player::NONE() in case the field is not owned.
      */
-    public function getField($row, $column): Player
+    public function getField(int $row, int $column): Player
     {
         return $this->cells[$row][$column];
     }
 
-    public function fillField(int $row, int $column, Player $owner)
+    public function fillField(int $row, int $column, Player $owner): void
     {
         $this->cells[$row][$column] = $owner;
     }

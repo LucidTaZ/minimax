@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\engine;
 
 /**
@@ -31,7 +33,7 @@ class AlphaBeta
     /**
      * Update the constraint with new information
      */
-    public function update(Evaluation $evaluation, NodeType $nodeType)
+    public function update(Evaluation $evaluation, NodeType $nodeType): void
     {
         if ($nodeType == NodeType::MAX()) {
             $this->alpha = max($this->alpha, $evaluation->score);

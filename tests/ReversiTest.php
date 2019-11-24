@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace lucidtaz\minimax\tests;
 
 use BadMethodCallException;
@@ -16,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ReversiTest extends TestCase
 {
-    public function testReversiDetectsIllegalMovesNoNeighbors()
+    public function testReversiDetectsIllegalMovesNoNeighbors(): void
     {
         $state = new GameState;
 
@@ -25,7 +27,7 @@ class ReversiTest extends TestCase
         $state->makeMove(0, 0);
     }
 
-    public function testReversiDetectsIllegalMovesOwnNeighbor()
+    public function testReversiDetectsIllegalMovesOwnNeighbor(): void
     {
         $state = new GameState;
 
@@ -34,7 +36,7 @@ class ReversiTest extends TestCase
         $state->makeMove(2, 3);
     }
 
-    public function testReversiAllowsLegalMove()
+    public function testReversiAllowsLegalMove(): void
     {
         $BLUE = Player::BLUE();
         $RED = Player::RED();
@@ -52,7 +54,7 @@ class ReversiTest extends TestCase
         $this->assertEquals($RED, $newState->getNextPlayer(), 'Player turn proceeded');
     }
 
-    public function testEngineTakesAMove()
+    public function testEngineTakesAMove(): void
     {
         $BLUE = Player::BLUE();
         $RED = Player::RED();
@@ -74,13 +76,13 @@ class ReversiTest extends TestCase
     /**
      * Verify alpha-beta pruning optimization
      *
-     * Empyrical test times:
+     * Empirical test times:
      * Max depth
      *       | Duration normal
      *       |       | Duration AB pruning
      *       |       |      | Nodes evaluated normal
-     *       |       |      |       |Nodes evaluated AB pruning
-     * ------+-------+------|-------+--------
+     *       |       |      |        |Nodes evaluated AB pruning
+     * ------+-------+------+--------+--------
      *     1 |   0.0 |  0.0 |      5 |     5
      *     2 |   0.0 |  0.0 |     17 |    15
      *     3 |   0.1 |  0.2 |     85 |    67
@@ -89,7 +91,7 @@ class ReversiTest extends TestCase
      *     6 |  20   |  5   |  18595 |  2342
      *     7 | 165   | 17   | 199309 | 13958
      */
-    public function testEngineHandlesLargeSearchSpace()
+    public function testEngineHandlesLargeSearchSpace(): void
     {
         $BLUE = Player::BLUE();
         $RED = Player::RED();
